@@ -1939,25 +1939,39 @@ window.onload = () => {
 // ═══════════════════════════════════════════════════════════
 function setMode(m) {
   state.mode = m;
+
+  // Update mode buttons
   document.querySelectorAll('.mode-btn').forEach(b => b.classList.remove('active'));
   const cls = m.toLowerCase();
-  document.querySelector(`.mode-btn.${cls}`).classList.add('active');
-  document.getElementById('liveDot').style.background = MODES[m].dotColor;
-  document.getElementById('modeLabel').textContent = m === 'Lab'
+  const activeBtn = document.querySelector(`.mode-btn.${cls}`);
+  if (activeBtn) activeBtn.classList.add('active');
+
+  // Direct hex colors — avoid CSS var() strings in JS
+  const modeColors = {
+    Scalp:    '#f05c5c',
+    Intraday: '#f0b429',
+    Swing:    '#5b9cf6',
+    Lab:      '#a78bfa',
+  };
+  const color = modeColors[m] || '#f0b429';
+
+  document.getElementById('liveDot').style.background   = color;
+  document.getElementById('modeLabel').textContent      = m === 'Lab'
     ? ('🧪 ' + (state.lab.name || 'LAB'))
     : m.toUpperCase();
-  document.getElementById('modeTF').textContent = m === 'Lab'
-    ? state.lab.tf.join(' → ')
+  document.getElementById('modeTF').textContent         = m === 'Lab'
+    ? (state.lab.tf || ['?','?','?']).join(' → ')
     : MODES[m].tf;
-  document.getElementById('wfModeLabel').textContent = m === 'Lab'
+  document.getElementById('wfModeLabel').textContent    = m === 'Lab'
     ? '🧪 ' + (state.lab.name || 'EXPERIMENT') + ' MODE'
     : m.toUpperCase() + ' MODE';
-  document.getElementById('wfModeLabel').style.color = MODES[m].color;
+  document.getElementById('wfModeLabel').style.color    = color;
 
   // Show/hide lab section
-  document.getElementById('labSection').style.display = m === 'Lab' ? 'block' : 'none';
+  const labSection = document.getElementById('labSection');
+  if (labSection) labSection.style.display = m === 'Lab' ? 'block' : 'none';
 
-  // Sync lab TF_OPTIONS with current lab config
+  // Lab-specific: sync TF options + experiment tracker
   if (m === 'Lab') {
     syncLabTFOptions();
     renderExpSelector(state.lab.name || '__new__');
@@ -1965,23 +1979,27 @@ function setMode(m) {
     renderExpFilterTags();
   }
 
-  applyModeDefaults();
+  applyModeDefaults();   // ← sets SL + RR inputs correctly
   renderTFGrid();
-  renderModeInfo();
+  renderModeInfo();      // ← updates Mode Parameters panel
   renderWorkflow();
   calcSLTP();
   updateChecklist();
 }
 
 function applyModeDefaults() {
-  const cfg = MODES[state.mode];
-  const defaultSL = state.mode === 'Lab' ? state.lab.sl : cfg.defaultSL;
-  const defaultRR = state.mode === 'Lab' ? state.lab.rr : cfg.defaultRR;
-  document.getElementById('slDist').value = defaultSL;
-  const sel = document.getElementById('rrTarget');
-  for (let opt of sel.options) {
-    if (parseInt(opt.value) === defaultRR) { opt.selected = true; break; }
-  }
+  const cfg   = MODES[state.mode];
+  const defSL = state.mode === 'Lab' ? (state.lab.sl || cfg.defaultSL) : cfg.defaultSL;
+  const defRR = state.mode === 'Lab' ? (state.lab.rr || cfg.defaultRR) : cfg.defaultRR;
+
+  document.getElementById('slDist').value    = defSL;
+  document.getElementById('rrTarget').value  = defRR;   // ← number input, just set .value directly
+
+  // Sync RR chip active state
+  document.querySelectorAll('.rr-chip').forEach(b => {
+    b.classList.toggle('active', parseFloat(b.textContent) === defRR);
+  });
+
   calcSLTP();
 }
 
@@ -2000,19 +2018,22 @@ function onLabChange() {
     document.getElementById('labTF2').value,
   ];
   syncLabTFOptions();
+
   // Update header badge live
-  document.getElementById('modeLabel').textContent = '🧪 ' + (state.lab.name || 'LAB');
-  document.getElementById('modeTF').textContent = state.lab.tf.join(' → ');
-  document.getElementById('wfModeLabel').textContent = '🧪 ' + (state.lab.name || 'EXPERIMENT') + ' MODE';
-  // Re-apply SL/RR defaults from lab config
-  document.getElementById('slDist').value = state.lab.sl;
-  const sel = document.getElementById('rrTarget');
-  for (let opt of sel.options) {
-    if (parseInt(opt.value) === state.lab.rr) { opt.selected = true; break; }
-  }
+  document.getElementById('modeLabel').textContent    = '🧪 ' + (state.lab.name || 'LAB');
+  document.getElementById('modeTF').textContent       = state.lab.tf.join(' → ');
+  document.getElementById('wfModeLabel').textContent  = '🧪 ' + (state.lab.name || 'EXPERIMENT') + ' MODE';
+
+  // Re-apply SL/RR — rrTarget is a number input now
+  document.getElementById('slDist').value   = state.lab.sl;
+  document.getElementById('rrTarget').value = state.lab.rr;
+  document.querySelectorAll('.rr-chip').forEach(b => {
+    b.classList.toggle('active', parseFloat(b.textContent) === state.lab.rr);
+  });
+
   calcSLTP();
   renderTFGrid();
-  renderModeInfo();
+  renderModeInfo(); // ← refresh Mode Parameters panel with live lab values
 }
 
 function syncLabTFOptions() {
@@ -2071,21 +2092,47 @@ function isMTFAligned() {
 //  MODE INFO PANEL
 // ═══════════════════════════════════════════════════════════
 function renderModeInfo() {
-  const cfg = MODES[state.mode];
-  const params = cfg.params;
-  const keys = Object.keys(params);
+  const m   = state.mode;
+  const cfg = MODES[m];
   const panel = document.getElementById('modeInfoPanel');
-  panel.style.borderColor = cfg.color;
+  if (!panel) return;
+
+  // Build params — Lab mode shows live state values
+  let params, description;
+  if (m === 'Lab') {
+    const tfs = state.lab.tf || ['—','—','—'];
+    params = {
+      'Experiment':  state.lab.name  || '(ยังไม่ตั้งชื่อ)',
+      'HTF':         tfs[0] || '—',
+      'MTF':         tfs[1] || '—',
+      'LTF':         tfs[2] || '—',
+      'Default SL':  '$' + (state.lab.sl || 5),
+      'Default RR':  '1:' + (state.lab.rr || 3),
+    };
+    description = state.lab.hypothesis
+      ? '💡 ' + state.lab.hypothesis.slice(0, 80) + (state.lab.hypothesis.length > 80 ? '…' : '')
+      : cfg.description;
+  } else {
+    params = cfg.params;
+    description = cfg.description;
+  }
+
+  const colorVal = m === 'Lab' ? '#a78bfa'
+                 : m === 'Scalp' ? '#f05c5c'
+                 : m === 'Intraday' ? '#f0b429'
+                 : '#5b9cf6'; // Swing
+
+  panel.style.borderColor = colorVal;
   panel.innerHTML = `
-    <div class="mi-title" style="color:${cfg.color}">
-      <span>● ${state.mode} Mode</span>
+    <div class="mi-title" style="color:${colorVal}">
+      <span>● ${m} Mode</span>
     </div>
-    <div style="font-size:10px;color:var(--text-2);margin-bottom:10px;">${cfg.description}</div>
+    <div style="font-size:10px;color:var(--text-2);margin-bottom:10px;line-height:1.5;">${description}</div>
     <div class="mode-params">
-      ${keys.map(k => `
+      ${Object.entries(params).map(([k, v]) => `
         <div class="mp">
           <div class="mp-key">${k}</div>
-          <div class="mp-val">${params[k]}</div>
+          <div class="mp-val">${v}</div>
         </div>`).join('')}
     </div>`;
 }
