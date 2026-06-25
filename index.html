@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8"/>
 <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-<title>SMC Lab Journal — XAUUSD</title>
+<title>SMC Trade Journal — XAUUSD</title>
 <style>
 :root{
   --bg-0:#0a0c0f;--bg-1:#111418;--bg-2:#181c22;--bg-3:#1f252e;--bg-4:#252d38;
@@ -358,6 +358,14 @@ body{background:var(--bg-0);color:var(--text-0);font-family:-apple-system,BlinkM
 .vtab{padding:6px 14px;border-radius:7px 7px 0 0;border:1px solid var(--border);border-bottom:none;background:var(--bg-2);color:var(--text-2);font-size:10px;font-weight:700;cursor:pointer;font-family:inherit;letter-spacing:.04em;transition:all .15s;}
 .vtab.active{background:var(--bg-1);color:var(--text-0);border-color:var(--border-light);}
 
+/* STORAGE WARNING */
+.storage-warn{display:none;align-items:center;gap:6px;background:#1a1208;border:1px solid var(--gold-dim);border-radius:6px;padding:6px 10px;font-size:10px;color:var(--gold);margin-top:4px;}
+.storage-warn.show{display:flex;}
+
+/* DASHBOARD HEATMAP */
+#hmContainer{overflow-x:auto;padding-bottom:4px;}
+#ddContainer{}
+
 @media(max-width:900px){
   .layout{grid-template-columns:1fr;min-height:unset;}
   .sidebar{height:auto;position:static;max-height:none;border-right:none;border-bottom:1px solid var(--border);}
@@ -386,7 +394,7 @@ body{background:var(--bg-0);color:var(--text-0);font-family:-apple-system,BlinkM
   </div>
   <div class="lab-badge">
     <div class="lab-dot"></div>
-    <span style="color:var(--text-2);">Exp:</span>
+    <span style="color:var(--text-2);">Portfolio:</span>
     <span id="badgeName" style="color:var(--lab);font-weight:700;">—</span>
     <span style="color:var(--text-2);">TF:</span>
     <span id="badgeTF" style="color:var(--text-0);font-family:monospace;font-weight:600;font-size:10px;">D1→H4→H1</span>
@@ -420,27 +428,27 @@ body{background:var(--bg-0);color:var(--text-0);font-family:-apple-system,BlinkM
 <div class="layout">
 <div class="sidebar">
 
-  <!-- EXPERIMENT CONFIG -->
+  <!-- PORTFOLIO CONFIG -->
   <div class="sec" style="background:linear-gradient(180deg,#0f0b1a 0%,transparent 100%);">
-    <div class="stitle">🧪 Experiment Config</div>
+    <div class="stitle">💼 Portfolio Config</div>
     <div class="labcfg">
       <div>
         <div class="lsub" style="margin-bottom:6px;">Select / New</div>
         <div style="display:flex;gap:6px;align-items:center;">
           <select class="lsel" id="labExpSelector" onchange="loadExperiment(this.value)" style="flex:1;">
-            <option value="__new__">＋ New Experiment</option>
+            <option value="__new__">＋ New Portfolio</option>
           </select>
           <button onclick="deleteExperiment()" title="ลบ"
             style="padding:6px 10px;border-radius:6px;border:1px solid var(--red-dim);background:transparent;color:var(--red-dim);cursor:pointer;font-size:12px;transition:all .15s;white-space:nowrap;"
             onmouseover="this.style.color='var(--red)';this.style.borderColor='var(--red)'"
             onmouseout="this.style.color='var(--red-dim)';this.style.borderColor='var(--red-dim)'">🗑</button>
         </div>
-        <div id="labExpStatus" class="lhint" style="margin-top:5px;color:var(--lab);">New experiment — กรอกชื่อแล้วกด Save</div>
+        <div id="labExpStatus" class="lhint" style="margin-top:5px;color:var(--lab);">New portfolio — กรอกชื่อแล้วกด Save</div>
       </div>
       <div>
-        <div class="lsub">Experiment Name</div>
+        <div class="lsub">Portfolio Name</div>
         <div style="display:flex;gap:6px;">
-          <input type="text" class="lnameinp" id="labExpName" placeholder="เช่น OB H1 No Fibo · EMA Cross" oninput="onLabChange()" maxlength="80" style="flex:1;"/>
+          <input type="text" class="lnameinp" id="labExpName" placeholder="เช่น Live Account · Paper Trading · ICT 2024" oninput="onLabChange()" maxlength="80" style="flex:1;"/>
           <button onclick="saveExperiment()"
             style="padding:7px 12px;border-radius:7px;border:1px solid var(--lab);background:transparent;color:var(--lab);cursor:pointer;font-size:11px;font-weight:700;white-space:nowrap;transition:all .15s;"
             onmouseover="this.style.background='#1a1230'" onmouseout="this.style.background='transparent'">💾 Save</button>
@@ -464,20 +472,20 @@ body{background:var(--bg-0);color:var(--text-0);font-family:-apple-system,BlinkM
         </div>
       </div>
       <div>
-        <div class="lsub">Default Parameters</div>
+        <div class="lsub">Default Parameters (ใช้คำนวณ Lot)</div>
         <div class="lr2">
-          <div><div class="lh">Default SL ($)</div><input type="number" class="linp" id="labSL" value="5" step="0.5" min="0.1" oninput="onLabChange()"/></div>
-          <div><div class="lh">Default RR</div>
+          <div><div class="lh">Default R:R</div>
             <select class="lsel" id="labRR" onchange="onLabChange()">
               <option value="1.5">1:1.5</option><option value="2">1:2</option><option value="3" selected>1:3</option><option value="4">1:4</option><option value="5">1:5</option><option value="6">1:6</option><option value="7">1:7</option><option value="10">1:10</option>
             </select></div>
+          <div><div class="lh">Default Risk %</div><input type="number" class="linp" id="labRiskPct" value="1" step="0.1" min="0.1" max="20" oninput="onLabChange()"/></div>
         </div>
       </div>
       <div>
         <div class="lsub">Hypothesis / Goal</div>
         <textarea class="ltxt" id="labHypothesis" placeholder="สิ่งที่ต้องการพิสูจน์..." oninput="onLabChange()" rows="3"></textarea>
       </div>
-      <div class="lhint">⚡ Config บันทึกอัตโนมัติ · Trades แยก stats ตาม Experiment</div>
+      <div class="lhint">⚡ Config บันทึกอัตโนมัติ · Trades แยก stats ตาม Portfolio</div>
     </div>
   </div>
 
@@ -643,7 +651,7 @@ body{background:var(--bg-0);color:var(--text-0);font-family:-apple-system,BlinkM
     <textarea class="ntarea" id="tradeNote" placeholder="เหตุผล setup, สภาพตลาด, ข้อสังเกต..."></textarea>
     <!-- Image Attachment -->
     <div style="margin-top:8px;">
-      <label class="flbl">📸 Chart Screenshot <span style="color:var(--text-2);font-size:8px;">(compress อัตโนมัติ ~50KB)</span></label>
+      <label class="flbl">📸 Chart Screenshot <span style="color:var(--text-2);font-size:8px;">(บันทึกเต็มคุณภาพ)</span></label>
       <div class="img-attach-area" id="imgDropArea" onclick="document.getElementById('chartImgInput').click()">
         <input type="file" id="chartImgInput" accept="image/*" style="display:none" onchange="handleImgSelect(event)"/>
         <img id="imgPreview" class="img-thumb" style="display:none"/>
@@ -677,21 +685,27 @@ body{background:var(--bg-0);color:var(--text-0);font-family:-apple-system,BlinkM
 
   <div class="panel">
     <div class="phdr">
-      <span class="ptitle">Equity Curve</span>
+      <span class="ptitle">📊 Performance Dashboard</span>
       <div style="display:flex;align-items:center;gap:8px;">
         <div class="csbrow">
-          <button class="csb active" id="csb-s" onclick="setChartSize(160,'s')">S</button>
-          <button class="csb" id="csb-m" onclick="setChartSize(260,'m')">M</button>
-          <button class="csb" id="csb-l" onclick="setChartSize(400,'l')">L</button>
-          <button class="csb" id="csb-xl" onclick="setChartSize(520,'xl')">XL</button>
+          <button class="csb active" id="dash-wr" onclick="setDashTab('wr')">Rolling WR</button>
+          <button class="csb" id="dash-hm" onclick="setDashTab('hm')">PnL Heatmap</button>
+          <button class="csb" id="dash-dd" onclick="setDashTab('dd')">Drawdown</button>
         </div>
-        <span style="font-size:10px;color:var(--text-2)">actual PnL ($)</span>
       </div>
     </div>
     <div style="padding:0;">
-      <div class="chwrap" id="chartWrap">
-        <div class="charea"><canvas id="equityCanvas"></canvas><div class="nodata" id="noDataLabel">No trades yet</div></div>
-        <div class="chdrag" id="chartDragHandle"></div>
+      <!-- Rolling Win Rate -->
+      <div id="dash-panel-wr" class="chwrap" style="height:220px;">
+        <div class="charea"><canvas id="wrCanvas"></canvas><div class="nodata" id="wrNoData">No trades yet</div></div>
+      </div>
+      <!-- PnL Heatmap -->
+      <div id="dash-panel-hm" style="display:none;padding:12px 14px;">
+        <div id="hmContainer"></div>
+      </div>
+      <!-- Drawdown Meter -->
+      <div id="dash-panel-dd" style="display:none;padding:14px 16px;">
+        <div id="ddContainer"></div>
       </div>
     </div>
   </div>
@@ -700,7 +714,7 @@ body{background:var(--bg-0);color:var(--text-0);font-family:-apple-system,BlinkM
     <div class="phdr" style="cursor:pointer;" onclick="toggleWF()">
       <span class="ptitle">📋 Lab Workflow</span>
       <div style="display:flex;align-items:center;gap:8px;">
-        <span id="wfExpLabel" style="font-size:10px;color:var(--lab);font-weight:700;">EXPERIMENT MODE</span>
+        <span id="wfExpLabel" style="font-size:10px;color:var(--lab);font-weight:700;">PORTFOLIO MODE</span>
         <span id="wfToggleIcon" style="font-size:12px;color:var(--text-2);">▾</span>
       </div>
     </div>
@@ -765,7 +779,7 @@ body{background:var(--bg-0);color:var(--text-0);font-family:-apple-system,BlinkM
     <div id="logCards" class="cardswrap"><div class="logempty"><span>ยังไม่มีข้อมูล — เพิ่ม trade แรกเลย</span></div></div>
     <div id="logTable" class="logwrap" style="display:none;">
       <table class="logtbl">
-        <thead><tr><th>#</th><th>Date</th><th>Dir</th><th>Session</th><th>Experiment</th><th>Entry</th><th>SL$</th><th>TP$</th><th>R:R</th><th>Lot</th><th>Lev</th><th>Risk%</th><th>Risk$</th><th>Fibo</th><th>MTF</th><th>Tags</th><th>Outcome</th><th>PnL($)</th><th></th></tr></thead>
+        <thead><tr><th>#</th><th>Date</th><th>Dir</th><th>Session</th><th>Portfolio</th><th>Entry</th><th>SL$</th><th>TP$</th><th>R:R</th><th>Lot</th><th>Lev</th><th>Risk%</th><th>Risk$</th><th>Fibo</th><th>MTF</th><th>Tags</th><th>Outcome</th><th>PnL($)</th><th></th></tr></thead>
         <tbody id="logBody"><tr><td colspan="19" class="logempty"><span>ยังไม่มีข้อมูล</span></td></tr></tbody>
       </table>
     </div>
@@ -788,8 +802,8 @@ body{background:var(--bg-0);color:var(--text-0);font-family:-apple-system,BlinkM
 
   <div class="panel" id="expTrackerPanel" style="display:none;">
     <div class="phdr">
-      <span class="ptitle">🧪 Experiment Tracker</span>
-      <span style="font-size:10px;color:var(--lab);">แยก stats ตาม Experiment</span>
+      <span class="ptitle">💼 Portfolio Tracker</span>
+      <span style="font-size:10px;color:var(--lab);">แยก stats ตาม Portfolio</span>
     </div>
     <div class="pbody"><div id="expTrackerGrid" class="exptg"><div style="color:var(--text-2);font-size:12px;">ยังไม่มี trades</div></div></div>
   </div>
@@ -866,7 +880,7 @@ const LAB_WF=[
   {t:'Analyze ≥20',d:'ดู WR/EV/Tag Performance หลัง ≥20 trades'},
 ];
 
-let state={direction:'BUY',outcome:null,activeTags:[],trades:[],tfBias:{0:'bull',1:'bull',2:'bull'},logFilter:'ALL',logView:'card',lab:{name:'',tf:['D1','H4','H1'],sl:5,rr:3,hypothesis:''}};
+let state={direction:'BUY',outcome:null,activeTags:[],trades:[],tfBias:{0:'bull',1:'bull',2:'bull'},logFilter:'ALL',logView:'card',lab:{name:'',tf:['D1','H4','H1'],rr:3,riskPct:1,hypothesis:''}};
 let currentLeverage=100;
 let instrumentName=localStorage.getItem('smc_instrument')||'XAUUSD';
 let _pendingDelExp=null;
@@ -880,23 +894,24 @@ window.onload=()=>{
   calcSLTP(); calcLot(); updateChecklist();
   setLogView('card');
   renderExpSelector('__new__'); renderExpTracker(); renderExpFilterTags();
-  initChartDrag(); initImgDrop(); loadFromStorage();
+  initImgDrop(); loadFromStorage();
   calState.year=now.getFullYear(); calState.month=now.getMonth();
   renderCalendar(); renderWeeklyReflections();
+  setDashTab('wr');
 };
 
 /* LAB CONFIG */
 function onLabChange(){
   state.lab.name=document.getElementById('labExpName').value.trim();
   state.lab.hypothesis=document.getElementById('labHypothesis').value;
-  state.lab.sl=parseFloat(document.getElementById('labSL').value)||5;
   state.lab.rr=parseFloat(document.getElementById('labRR').value)||3;
+  state.lab.riskPct=parseFloat(document.getElementById('labRiskPct').value)||1;
   state.lab.tf=[document.getElementById('labTF0').value,document.getElementById('labTF1').value,document.getElementById('labTF2').value];
   document.getElementById('badgeName').textContent=state.lab.name||'—';
   document.getElementById('badgeTF').textContent=state.lab.tf.join('→');
-  document.getElementById('wfExpLabel').textContent=state.lab.name?'🧪 '+state.lab.name:'EXPERIMENT MODE';
-  document.getElementById('slDist').value=state.lab.sl;
+  document.getElementById('wfExpLabel').textContent=state.lab.name?'💼 '+state.lab.name:'PORTFOLIO MODE';
   document.getElementById('rrTarget').value=state.lab.rr;
+  document.getElementById('riskPct').value=state.lab.riskPct;
   setRR(state.lab.rr,false);
   calcSLTP(); renderTFGrid(); updateChecklist();
 }
@@ -999,16 +1014,17 @@ function calcLot(){
 function updateChecklist(){
   const sl=parseFloat(document.getElementById('slDist').value)||0;
   const rr=parseFloat(document.getElementById('rrTarget').value)||3;
+  const rp=parseFloat(document.getElementById('riskPct').value)||1;
   const fiboVal=(document.getElementById('fiboZone')||{}).value||'';
-  const maxSL=(state.lab.sl||5)*3;
   const items=[
     {l:'HTF/MTF Trend Aligned',p:isMTFAligned()},
     {l:'LTF Bias ไม่ Neutral',p:(state.tfBias[2]||'bull')!=='neut'},
-    {l:`SL ≤ $${maxSL} (3x default)`,p:sl<=maxSL&&sl>0},
+    {l:'SL Distance > 0',p:sl>0},
     {l:'Fibo Zone เลือกแล้ว',p:!!fiboVal&&fiboVal!=='ไม่ใช้ Fibo'},
     {l:`R:R ≥ 1:${state.lab.rr}`,p:rr>=state.lab.rr},
+    {l:`Risk ≤ 2% (ตั้งที่ ${rp}%)`,p:rp<=2&&rp>0},
     {l:'SMC Tags ≥ 2',p:state.activeTags.length>=2},
-    {l:'Experiment ตั้งชื่อแล้ว',p:!!state.lab.name},
+    {l:'Portfolio ตั้งชื่อแล้ว',p:!!state.lab.name},
     {l:'Outcome ระบุแล้ว',p:!!state.outcome},
   ];
   const passed=items.filter(i=>i.p).length;
@@ -1062,22 +1078,9 @@ function calcRealizedRR(){
 let currentImgData=null;
 function handleImgSelect(ev){
   const file=ev.target.files[0];if(!file)return;
-  compressImg(file,50*1024,img=>{currentImgData=img;showImgPreview(img);});
-}
-function compressImg(file,maxBytes,cb){
   const reader=new FileReader();
-  reader.onload=e=>{
-    const img=new Image();
-    img.onload=()=>{
-      let w=img.width,h=img.height,q=0.7;
-      const MAX_W=800;if(w>MAX_W){h=Math.round(h*MAX_W/w);w=MAX_W;}
-      const canvas=document.createElement('canvas');canvas.width=w;canvas.height=h;
-      const ctx=canvas.getContext('2d');ctx.drawImage(img,0,0,w,h);
-      let result=canvas.toDataURL('image/jpeg',q);
-      while(result.length*0.75>maxBytes&&q>0.2){q-=0.1;result=canvas.toDataURL('image/jpeg',q);}
-      cb(result);
-    };img.src=e.target.result;
-  };reader.readAsDataURL(file);
+  reader.onload=e=>{currentImgData=e.target.result;showImgPreview(e.target.result);};
+  reader.readAsDataURL(file);
 }
 function showImgPreview(src){
   document.getElementById('imgPreview').src=src;document.getElementById('imgPreview').style.display='block';
@@ -1090,7 +1093,7 @@ function initImgDrop(){
   const a=document.getElementById('imgDropArea');if(!a)return;
   a.addEventListener('dragover',e=>{e.preventDefault();a.style.borderColor='var(--gold)';});
   a.addEventListener('dragleave',()=>{a.style.borderColor='var(--border)';});
-  a.addEventListener('drop',e=>{e.preventDefault();a.style.borderColor='var(--border)';const f=e.dataTransfer.files[0];if(f&&f.type.startsWith('image/'))compressImg(f,50*1024,img=>{currentImgData=img;showImgPreview(img);});});
+  a.addEventListener('drop',e=>{e.preventDefault();a.style.borderColor='var(--border)';const f=e.dataTransfer.files[0];if(f&&f.type.startsWith('image/')){const r=new FileReader();r.onload=ev=>{currentImgData=ev.target.result;showImgPreview(ev.target.result);};r.readAsDataURL(f);}});
 }
 
 /* ADD TRADE */
@@ -1121,7 +1124,7 @@ function addTrade(){
   const pnl=lot>0?(state.outcome==='WIN'?lot*100*(realRR?sl*realRR:tp):state.outcome==='LOSS'?-(lot*100*sl):0):(state.outcome==='WIN'?(realRR?sl*realRR:tp):state.outcome==='LOSS'?-sl:0);
   const trade={id:Date.now(),no:state.trades.length+1,date,time,session,entry:entry.toFixed(2),sl:sl.toFixed(2),tp:tp.toFixed(2),rr:`1:${rr.toFixed(1)}`,fibo,mtf:getMTF(),tags:[...state.activeTags],outcome:state.outcome,pnl,lot:lot.toFixed(2),leverage:currentLeverage,riskPct:rp.toFixed(1),riskAmt:riskAmt.toFixed(2),balance:bal.toFixed(0),dir:state.direction,expName:state.lab.name||'Unnamed',expTF:[...state.lab.tf],duration:getDurStr(),hypothesis:state.lab.hypothesis,note,exitPrice:exitP,realRR,mae,mfe,img:currentImgData||null};
   state.trades.push(trade);saveToStorage();
-  renderLog();renderStats();renderEquity();renderTagPerformance();renderExpTracker();renderExpFilterTags();renderTagPairs();renderCalendar();renderWeeklyReflections();
+  renderLog();renderStats();renderDashboard();renderTagPerformance();renderExpTracker();renderExpFilterTags();renderTagPairs();renderCalendar();renderWeeklyReflections();
   showToast('ok',`Trade #${trade.no} — ${trade.outcome} ${trade.pnl>=0?'+':''}$${Math.abs(trade.pnl).toFixed(2)}`);
   clearForm();
 }
@@ -1134,7 +1137,8 @@ function clearForm(){
   document.getElementById('actualExitPrice').value='';document.getElementById('tradeMae').value='';document.getElementById('tradeMfe').value='';
   document.getElementById('realizedRRBox').style.display='none';
   removeImg();
-  document.getElementById('slDist').value=state.lab.sl;document.getElementById('rrTarget').value=state.lab.rr;
+  document.getElementById('rrTarget').value=state.lab.rr;
+  document.getElementById('riskPct').value=state.lab.riskPct||1;
   setRR(state.lab.rr,true);renderSMCTags();calcSLTP();updateChecklist();
 }
 
@@ -1145,22 +1149,23 @@ function saveExperiments(e){localStorage.setItem(EXP_KEY,JSON.stringify(e));}
 function saveExperiment(){
   const name=document.getElementById('labExpName').value.trim();if(!name){showToast('err','กรุณาตั้งชื่อก่อน');return;}
   const exps=loadExperiments();const isNew=!exps[name];
-  exps[name]={tf:[...state.lab.tf],sl:state.lab.sl,rr:state.lab.rr,hypothesis:state.lab.hypothesis,createdAt:exps[name]?.createdAt||new Date().toISOString(),updatedAt:new Date().toISOString()};
+  exps[name]={tf:[...state.lab.tf],rr:state.lab.rr,riskPct:state.lab.riskPct,hypothesis:state.lab.hypothesis,createdAt:exps[name]?.createdAt||new Date().toISOString(),updatedAt:new Date().toISOString()};
   saveExperiments(exps);renderExpSelector(name);renderExpTracker();renderExpFilterTags();
   showToast('ok',isNew?`สร้าง "${name}"`:`อัปเดต "${name}"`);
-  document.getElementById('labExpStatus').textContent=`✓ บันทึกแล้ว · ${Object.keys(exps).length} experiments`;
+  document.getElementById('labExpStatus').textContent=`✓ บันทึกแล้ว · ${Object.keys(exps).length} portfolios`;
 }
 function loadExperiment(name){
   if(name==='__new__'){
     ['labExpName','labHypothesis'].forEach(id=>document.getElementById(id).value='');
-    document.getElementById('labSL').value=5;document.getElementById('labRR').value=3;
+    document.getElementById('labRR').value=3;document.getElementById('labRiskPct').value=1;
     [['D1','labTF0'],['H4','labTF1'],['H1','labTF2']].forEach(([tf,id])=>{const s=document.getElementById(id);for(let o of s.options)o.selected=o.value===tf;});
-    document.getElementById('labExpStatus').textContent='New experiment — กรอกชื่อแล้วกด Save';
-    state.lab={name:'',tf:['D1','H4','H1'],sl:5,rr:3,hypothesis:''};onLabChange();return;
+    document.getElementById('labExpStatus').textContent='New portfolio — กรอกชื่อแล้วกด Save';
+    state.lab={name:'',tf:['D1','H4','H1'],rr:3,riskPct:1,hypothesis:''};onLabChange();return;
   }
   const exps=loadExperiments();const exp=exps[name];if(!exp)return;
-  document.getElementById('labExpName').value=name;document.getElementById('labHypothesis').value=exp.hypothesis||'';document.getElementById('labSL').value=exp.sl;
+  document.getElementById('labExpName').value=name;document.getElementById('labHypothesis').value=exp.hypothesis||'';
   const rs=document.getElementById('labRR');for(let o of rs.options)o.selected=parseFloat(o.value)===exp.rr;
+  document.getElementById('labRiskPct').value=exp.riskPct||1;
   exp.tf.forEach((tf,i)=>{const s=document.getElementById('labTF'+i);for(let o of s.options)o.selected=o.value===tf;});
   document.getElementById('labExpStatus').textContent=`โหลด "${name}" — ${state.trades.filter(t=>t.expName===name).length} trades`;
   onLabChange();showToast('ok',`โหลด "${name}"`);
@@ -1182,7 +1187,7 @@ function confirmDeleteExp(){
 }
 function renderExpSelector(av){
   const sel=document.getElementById('labExpSelector');const names=Object.keys(loadExperiments());
-  sel.innerHTML='<option value="__new__">＋ New Experiment</option>'+names.map(n=>`<option value="${n}"${n===av?' selected':''}>${n}</option>`).join('');
+  sel.innerHTML='<option value="__new__">＋ New Portfolio</option>'+names.map(n=>`<option value="${n}"${n===av?' selected':''}>${n}</option>`).join('');
 }
 function renderExpTracker(){
   const panel=document.getElementById('expTrackerPanel');const grid=document.getElementById('expTrackerGrid');
@@ -1194,8 +1199,12 @@ function renderExpTracker(){
     const trades=state.trades.filter(t=>t.expName===name);const n=trades.length;
     const wins=trades.filter(t=>t.outcome==='WIN').length;const losses=trades.filter(t=>t.outcome==='LOSS').length;
     const wr=n?((wins/n)*100).toFixed(0):'—';const pnl=trades.reduce((a,t)=>a+t.pnl,0);const ev=n?(pnl/n).toFixed(2):'—';
+    // %profit: sum of (pnl / riskAmt * riskPct) per trade
+    let pctProfit=null;
+    if(n){const pctArr=trades.filter(t=>t.balance&&parseFloat(t.balance)>0).map(t=>t.pnl/parseFloat(t.balance)*100);if(pctArr.length)pctProfit=pctArr.reduce((a,b)=>a+b,0);}
     const exp=exps[name];const tfs=exp?.tf||[];const isA=state.lab.name===name;
     const wrc=n===0?'var(--text-2)':parseInt(wr)>=50?'var(--green)':'var(--red)';
+    const pctHtml=pctProfit!==null?`<div class="expst"><div class="expstk">% Profit</div><div class="expstv" style="color:${pctProfit>=0?'var(--green)':'var(--red)'}">${pctProfit>=0?'+':''}${pctProfit.toFixed(2)}%</div></div>`:'';
     return`<div class="expc ${isA?'actexp':''}">
       <div class="expch" onclick="filterByExp('${name.replace(/'/g,"\\'")}')">
         <div class="expname">${isA?'● ':''}${name}${isA?'<span style="font-size:9px;background:#3d2d6e;padding:2px 6px;border-radius:4px;margin-left:4px;">ACTIVE</span>':''}</div>
@@ -1204,10 +1213,11 @@ function renderExpTracker(){
       <div class="expsr">
         <div class="expst"><div class="expstk">Win Rate</div><div class="expstv" style="color:${wrc}">${n?wr+'%':'—'}</div></div>
         <div class="expst"><div class="expstk">Total PnL</div><div class="expstv" style="color:${pnl>=0?'var(--green)':'var(--red)'}">${n?(pnl>=0?'+':'')+'$'+Math.abs(pnl).toFixed(2):'—'}</div></div>
+        ${pctHtml}
         <div class="expst"><div class="expstk">Exp. Value</div><div class="expstv" style="color:${parseFloat(ev)>=0?'var(--gold)':'var(--red)'}">${n?(parseFloat(ev)>=0?'+':'')+'$'+Math.abs(ev):'—'}</div></div>
         <div class="expst"><div class="expstk">W/L/BE</div><div class="expstv" style="color:var(--text-1);font-size:11px;">${wins}/${losses}/${n-wins-losses}</div></div>
       </div>
-      ${tfs.length?`<div class="exptfr">${tfs.map((tf,i)=>`<span class="exptfb">${['HTF','MTF','LTF'][i]}: ${tf}</span>`).join('')}${exp?.sl?`<span class="exptfb" style="color:var(--red);border-color:#4a2020;">SL $${exp.sl}</span>`:''}${exp?.rr?`<span class="exptfb" style="color:var(--gold);border-color:#4a3a10;">RR 1:${exp.rr}</span>`:''}</div>`:''}
+      ${tfs.length?`<div class="exptfr">${tfs.map((tf,i)=>`<span class="exptfb">${['HTF','MTF','LTF'][i]}: ${tf}</span>`).join('')}${exp?.rr?`<span class="exptfb" style="color:var(--gold);border-color:#4a3a10;">RR 1:${exp.rr}</span>`:''}${exp?.riskPct?`<span class="exptfb" style="color:var(--green);border-color:#1a4a20;">Risk ${exp.riskPct}%</span>`:''}</div>`:''}
       ${exp?.hypothesis?`<div class="exphypo">💡 ${exp.hypothesis}</div>`:''}
     </div>`;
   }).join('');
@@ -1217,7 +1227,7 @@ function renderExpFilterTags(){
   const exps=loadExperiments();const ln=[...new Set(state.trades.filter(t=>t.expName).map(t=>t.expName))];
   const all=[...new Set([...Object.keys(exps),...ln])];
   if(!all.length){c.innerHTML='';return;}
-  c.innerHTML='<span style="font-size:9px;color:#6b5aa0;margin:0 4px;">|</span>'+all.map(n=>`<span class="filtchip" style="border-color:#4a3580;color:#a78bfa;" onclick="filterByExp('${n.replace(/'/g,"\\'")}')">🧪 ${n}</span>`).join('');
+  c.innerHTML='<span style="font-size:9px;color:#6b5aa0;margin:0 4px;">|</span>'+all.map(n=>`<span class="filtchip" style="border-color:#4a3580;color:#a78bfa;" onclick="filterByExp('${n.replace(/'/g,"\\'")}')">💼 ${n}</span>`).join('');
 }
 function filterByExp(name){state.logFilter='__exp__:'+name;document.querySelectorAll('.filtchip').forEach(e=>e.classList.remove('on'));renderLog();showToast('info',`กรอง: "${name}"`);}
 
@@ -1240,7 +1250,7 @@ function renderLogCards(){
       <div class="tctop"><div class="tctl">
         <span class="tcno">#${t.no}</span>
         <span class="bdg ${t.dir.toLowerCase()}">${t.dir}</span>
-        <span class="bdg lab">🧪 ${t.expName||'Lab'}</span>
+        <span class="bdg lab">💼 ${t.expName||'Portfolio'}</span>
         <span class="bdg ${oc}">${t.outcome}</span>
         <span class="tcdate">${t.date}${timeStr}</span>
         <span style="font-size:9px;color:var(--text-2);">${t.session}</span>
@@ -1302,7 +1312,7 @@ function confirmDeleteTrade(){
   state.trades=state.trades.filter(t=>t.id!==_pendingDelTrade);
   state.trades.forEach((t,i)=>t.no=i+1);
   _pendingDelTrade=null;saveToStorage();hideMdl('deleteTradeModal');
-  renderLog();renderStats();renderEquity();renderTagPerformance();renderExpTracker();renderExpFilterTags();renderTagPairs();renderCalendar();renderWeeklyReflections();
+  renderLog();renderStats();renderDashboard();renderTagPerformance();renderExpTracker();renderExpFilterTags();renderTagPairs();renderCalendar();renderWeeklyReflections();
   showToast('info','ลบ trade แล้ว');
 }
 
@@ -1356,7 +1366,7 @@ function saveEditTrade(){
   t.note=document.getElementById('etNote').value;t.fibo=document.getElementById('etFibo').value;
   t.outcome=_etOutcome;t.pnl=pnl;
   saveToStorage();hideMdl('editTradeModal');
-  renderLog();renderStats();renderEquity();renderTagPerformance();renderExpTracker();renderExpFilterTags();renderTagPairs();renderCalendar();renderWeeklyReflections();
+  renderLog();renderStats();renderDashboard();renderTagPerformance();renderExpTracker();renderExpFilterTags();renderTagPairs();renderCalendar();renderWeeklyReflections();
   showToast('ok',`Trade #${t.no} อัปเดตแล้ว`);
 }
 
@@ -1387,28 +1397,193 @@ function renderStats(){
   else{cs.textContent=curStreak;cs.className='sv '+(curType==='WIN'?'pos':'neg');csub.textContent=curType==='WIN'?'🔥 WIN streak':'💀 LOSS streak';}
 }
 
-/* EQUITY */
-function renderEquity(){
-  const canvas=document.getElementById('equityCanvas');const nd=document.getElementById('noDataLabel');
+/* DASHBOARD 3-IN-1 */
+let currentDashTab='wr';
+function setDashTab(tab){
+  currentDashTab=tab;
+  ['wr','hm','dd'].forEach(t=>{
+    const btn=document.getElementById('dash-'+t);
+    const panel=document.getElementById('dash-panel-'+t);
+    if(btn)btn.classList.toggle('active',t===tab);
+    if(panel)panel.style.display=t===tab?'':'none';
+  });
+  document.getElementById('dash-panel-'+tab).style.display='';
+  renderDashboard();
+}
+function renderDashboard(){
+  if(currentDashTab==='wr')renderRollingWR();
+  else if(currentDashTab==='hm')renderHeatmap();
+  else if(currentDashTab==='dd')renderDrawdown();
+}
+window.addEventListener('resize',()=>{if(state.trades.length)renderDashboard();});
+
+/* Rolling Win Rate (10-trade window) */
+function renderRollingWR(){
+  const canvas=document.getElementById('wrCanvas');const nd=document.getElementById('wrNoData');
   if(!state.trades.length){nd.style.display='flex';canvas.style.display='none';return;}
   nd.style.display='none';canvas.style.display='block';
-  const par=canvas.parentElement;const W=par.offsetWidth||600;const H=par.offsetHeight||200;
+  const par=canvas.parentElement;const W=par.offsetWidth||600;const H=par.offsetHeight||220;
   canvas.width=W;canvas.height=H;const ctx=canvas.getContext('2d');
-  let cum=[0];state.trades.forEach(t=>cum.push(cum[cum.length-1]+t.pnl));
-  const mn=Math.min(...cum),mx=Math.max(...cum);const range=mx-mn||1;
-  const pad={t:16,b:28,l:54,r:16};const cw=W-pad.l-pad.r,ch=H-pad.t-pad.b;
-  ctx.clearRect(0,0,W,H);ctx.strokeStyle='#1f252e';ctx.lineWidth=1;
-  for(let i=0;i<=4;i++){const y=pad.t+(ch/4)*i;ctx.beginPath();ctx.moveTo(pad.l,y);ctx.lineTo(W-pad.r,y);ctx.stroke();const val=mx-(range/4)*i;ctx.fillStyle='#5f6e83';ctx.font='9px Consolas,monospace';ctx.textAlign='right';ctx.fillText((val>=0?'+':'')+'$'+val.toFixed(1),pad.l-4,y+3);}
-  const xS=cw/(cum.length-1||1);const toY=v=>pad.t+ch-((v-mn)/range)*ch;const toX=i=>pad.l+i*xS;
-  const g=ctx.createLinearGradient(0,pad.t,0,H-pad.b);g.addColorStop(0,'#a78bfa33');g.addColorStop(1,'#a78bfa00');
-  ctx.beginPath();ctx.moveTo(toX(0),toY(0));cum.forEach((v,i)=>ctx.lineTo(toX(i),toY(v)));ctx.lineTo(toX(cum.length-1),H-pad.b);ctx.lineTo(pad.l,H-pad.b);ctx.closePath();ctx.fillStyle=g;ctx.fill();
-  ctx.beginPath();ctx.strokeStyle='#a78bfa';ctx.lineWidth=2;ctx.lineJoin='round';cum.forEach((v,i)=>i===0?ctx.moveTo(toX(i),toY(v)):ctx.lineTo(toX(i),toY(v)));ctx.stroke();
-  state.trades.forEach((t,i)=>{const x=toX(i+1),y=toY(cum[i+1]);ctx.beginPath();ctx.arc(x,y,4,0,Math.PI*2);ctx.fillStyle=t.outcome==='WIN'?'#2dd4a0':t.outcome==='LOSS'?'#f05c5c':'#9ba8bb';ctx.fill();});
-  ctx.fillStyle='#5f6e83';ctx.font='9px system-ui,Arial';ctx.textAlign='center';state.trades.forEach((t,i)=>{if(i%Math.max(1,Math.floor(state.trades.length/8))===0)ctx.fillText('#'+(i+1),toX(i+1),H-8);});
+  ctx.clearRect(0,0,W,H);
+  const WINDOW=10;const t=state.trades;const n=t.length;
+  // Build rolling WR points
+  const pts=[];
+  for(let i=0;i<n;i++){
+    const start=Math.max(0,i-WINDOW+1);const slice=t.slice(start,i+1);
+    const wins=slice.filter(x=>x.outcome==='WIN').length;
+    pts.push({x:i,wr:(wins/slice.length)*100,n:slice.length});
+  }
+  const pad={t:18,b:30,l:42,r:16};const cw=W-pad.l-pad.r;const ch=H-pad.t-pad.b;
+  // Grid lines at 25,50,75,100
+  [0,25,50,75,100].forEach(pct=>{
+    const y=pad.t+ch-(pct/100)*ch;
+    ctx.strokeStyle=pct===50?'#2a3240':'#1a2030';ctx.lineWidth=pct===50?1.5:1;
+    ctx.beginPath();ctx.moveTo(pad.l,y);ctx.lineTo(W-pad.r,y);ctx.stroke();
+    ctx.fillStyle=pct===50?'#5b9cf6':'#5f6e83';ctx.font='9px Consolas,monospace';ctx.textAlign='right';
+    ctx.fillText(pct+'%',pad.l-4,y+3);
+  });
+  if(n<2){// just show single point
+    const x=pad.l+cw/2;const y=pad.t+ch-(pts[0].wr/100)*ch;
+    ctx.beginPath();ctx.arc(x,y,5,0,Math.PI*2);ctx.fillStyle='#a78bfa';ctx.fill();return;
+  }
+  const xS=cw/(n-1||1);const toX=i=>pad.l+i*xS;const toY=v=>pad.t+ch-(v/100)*ch;
+  // Gradient fill
+  const g=ctx.createLinearGradient(0,pad.t,0,H-pad.b);g.addColorStop(0,'#2dd4a033');g.addColorStop(1,'#2dd4a000');
+  ctx.beginPath();ctx.moveTo(toX(0),toY(pts[0].wr));pts.forEach(p=>ctx.lineTo(toX(p.x),toY(p.wr)));ctx.lineTo(toX(n-1),H-pad.b);ctx.lineTo(pad.l,H-pad.b);ctx.closePath();ctx.fillStyle=g;ctx.fill();
+  // Line
+  ctx.beginPath();ctx.lineWidth=2;ctx.lineJoin='round';
+  pts.forEach((p,i)=>{
+    ctx.strokeStyle=p.wr>=50?'var(--green, #2dd4a0)':'var(--red, #f05c5c)';
+    if(i===0){ctx.moveTo(toX(p.x),toY(p.wr));}else{
+      const prev=pts[i-1];if((p.wr>=50)!==(prev.wr>=50)){ctx.stroke();ctx.beginPath();ctx.moveTo(toX(p.x),toY(p.wr));}
+      else{ctx.lineTo(toX(p.x),toY(p.wr));}
+    }
+  });ctx.stroke();
+  // Dots
+  pts.forEach(p=>{const x=toX(p.x),y=toY(p.wr);ctx.beginPath();ctx.arc(x,y,3,0,Math.PI*2);ctx.fillStyle=p.wr>=50?'#2dd4a0':'#f05c5c';ctx.fill();});
+  // X labels
+  ctx.fillStyle='#5f6e83';ctx.font='9px system-ui';ctx.textAlign='center';
+  pts.forEach((p,i)=>{if(i%Math.max(1,Math.floor(n/8))===0)ctx.fillText('#'+(i+1),toX(p.x),H-8);});
+  // Legend
+  ctx.fillStyle='#5f6e83';ctx.font='9px system-ui';ctx.textAlign='left';
+  ctx.fillText(`Rolling ${Math.min(WINDOW,n)}-trade Win Rate`,pad.l,pad.t-4);
+  const lastWR=pts[pts.length-1].wr;ctx.fillStyle=lastWR>=50?'#2dd4a0':'#f05c5c';
+  ctx.textAlign='right';ctx.fillText(`Latest: ${lastWR.toFixed(0)}%`,W-pad.r,pad.t-4);
 }
-window.addEventListener('resize',()=>{if(state.trades.length)renderEquity();});
 
-/* TAG PERF */
+/* PnL Heatmap (daily) */
+function renderHeatmap(){
+  const container=document.getElementById('hmContainer');if(!container)return;
+  if(!state.trades.length){container.innerHTML='<div style="color:var(--text-2);font-size:12px;text-align:center;padding:20px;">ยังไม่มีข้อมูล</div>';return;}
+  // Group by date
+  const byDate={};
+  state.trades.forEach(t=>{if(!t.date)return;if(!byDate[t.date])byDate[t.date]={pnl:0,trades:[]};byDate[t.date].pnl+=t.pnl;byDate[t.date].trades.push(t);});
+  const dates=Object.keys(byDate).sort();
+  if(!dates.length){container.innerHTML='<div style="color:var(--text-2);font-size:12px;">ไม่มีข้อมูล Date</div>';return;}
+  const pnls=Object.values(byDate).map(d=>d.pnl);const maxAbs=Math.max(...pnls.map(Math.abs))||1;
+  function dayOfWeek(d){return new Date(d).getDay();}
+  function weekKey(d){const dt=new Date(d);const day=dt.getDay();const diff=dt.getDate()-day+(day===0?-6:1);const mon=new Date(dt.setDate(diff));return mon.toISOString().split('T')[0];}
+  const weeks=[...new Set(dates.map(weekKey))].sort();
+  const DAYS_SH=['M','T','W','T','F','S','S'];
+  let html=`<div style="font-size:9px;color:var(--text-2);margin-bottom:8px;">Daily PnL Heatmap · ${dates.length} trading days</div>`;
+  html+=`<div style="display:flex;gap:3px;overflow-x:auto;padding-bottom:6px;">`;
+  // Day labels column
+  html+=`<div style="display:flex;flex-direction:column;gap:2px;padding-top:18px;">`;
+  ['Mon','Tue','Wed','Thu','Fri','Sat','Sun'].forEach(d=>html+=`<div style="font-size:8px;color:var(--text-2);height:18px;display:flex;align-items:center;width:24px;">${d}</div>`);
+  html+=`</div>`;
+  weeks.forEach(wk=>{
+    const wkDate=new Date(wk);const mon=wkDate.toLocaleDateString('en',{month:'short',day:'numeric'});
+    html+=`<div style="display:flex;flex-direction:column;gap:2px;">`;
+    html+=`<div style="font-size:7px;color:var(--text-2);text-align:center;height:16px;line-height:16px;white-space:nowrap;">${mon}</div>`;
+    for(let dow=1;dow<=7;dow++){// 1=Mon..7=Sun
+      const jsDay=dow===7?0:dow;// JS: 0=Sun
+      // find date in this week with this day
+      const d=dates.find(dt=>{const dtWk=weekKey(dt);return dtWk===wk&&new Date(dt).getDay()===jsDay;});
+      if(d){
+        const {pnl,trades}=byDate[d];const ratio=pnl/maxAbs;
+        const g=Math.abs(ratio);
+        const bg=pnl>0?`rgba(45,212,160,${0.15+g*0.6})`:pnl<0?`rgba(240,92,92,${0.15+g*0.6})`:'rgba(159,168,187,0.15)';
+        const wr=trades.filter(t=>t.outcome==='WIN').length;
+        const tip=`${d}: ${pnl>=0?'+':''}$${pnl.toFixed(2)} (${wr}W/${trades.length-wr}L)`;
+        html+=`<div title="${tip}" style="width:32px;height:18px;border-radius:3px;background:${bg};border:1px solid rgba(255,255,255,0.05);font-size:7px;font-family:monospace;color:${pnl>0?'#2dd4a0':pnl<0?'#f05c5c':'#9ba8bb'};display:flex;align-items:center;justify-content:center;cursor:default;overflow:hidden;">${pnl>=0?'+':''}${Math.abs(pnl)<100?pnl.toFixed(1):Math.round(pnl)}</div>`;
+      }else{html+=`<div style="width:32px;height:18px;border-radius:3px;background:rgba(255,255,255,0.02);border:1px solid rgba(255,255,255,0.03);"></div>`;}
+    }
+    html+=`</div>`;
+  });
+  html+=`</div>`;
+  // Legend
+  html+=`<div style="display:flex;gap:10px;margin-top:8px;font-size:9px;color:var(--text-2);align-items:center;">`;
+  html+=`<div style="width:12px;height:12px;border-radius:2px;background:rgba(45,212,160,0.7);"></div><span>กำไร</span>`;
+  html+=`<div style="width:12px;height:12px;border-radius:2px;background:rgba(240,92,92,0.7);"></div><span>ขาดทุน</span>`;
+  html+=`<div style="width:12px;height:12px;border-radius:2px;background:rgba(255,255,255,0.1);"></div><span>ไม่มี trade</span>`;
+  html+=`</div>`;
+  container.innerHTML=html;
+}
+
+/* Drawdown Meter */
+function renderDrawdown(){
+  const container=document.getElementById('ddContainer');if(!container)return;
+  if(!state.trades.length){container.innerHTML='<div style="color:var(--text-2);font-size:12px;text-align:center;padding:20px;">ยังไม่มีข้อมูล</div>';return;}
+  const t=state.trades;const n=t.length;
+  // Build equity curve
+  let cum=0;let peak=0;let drawdowns=[];let curDDStart=null;let maxDD=0;let maxDDPct=0;
+  let maxConsecLoss=0;let curCL=0;let totalLossDays=0;
+  const dds=[];
+  t.forEach((tr,i)=>{
+    cum+=tr.pnl;
+    if(cum>peak)peak=cum;
+    const dd=peak-cum;const ddPct=peak>0?(dd/peak)*100:0;
+    dds.push(dd);if(dd>maxDD){maxDD=dd;maxDDPct=ddPct;}
+    if(tr.outcome==='LOSS'){curCL++;maxConsecLoss=Math.max(maxConsecLoss,curCL);}else{curCL=0;}
+  });
+  const currentDD=peak-cum;const currentDDPct=peak>0?(currentDD/peak)*100:0;
+  // Recovery: how many trades to recover
+  let recCount=null;let inDD=false;let ddPeakCum=0;let ddCum=0;let ddIdx=null;
+  cum=0;peak=0;
+  t.forEach((tr,i)=>{cum+=tr.pnl;if(cum>=peak){if(inDD){recCount=i-ddIdx;inDD=false;}peak=cum;}else{if(!inDD){inDD=true;ddIdx=i;ddPeakCum=peak;}}});
+  const wins=t.filter(x=>x.outcome==='WIN');const losses=t.filter(x=>x.outcome==='LOSS');
+  const avgWin=wins.length?wins.reduce((a,x)=>a+x.pnl,0)/wins.length:0;
+  const avgLoss=losses.length?Math.abs(losses.reduce((a,x)=>a+x.pnl,0)/losses.length):0;
+  // DD bar
+  const ddBarPct=Math.min(currentDDPct,100);
+  const ddColor=ddBarPct<5?'var(--green)':ddBarPct<15?'var(--gold)':'var(--red)';
+  let html=`<div style="display:flex;flex-direction:column;gap:14px;">`;
+  // Current drawdown
+  html+=`<div>
+    <div style="display:flex;justify-content:space-between;font-size:9px;color:var(--text-2);margin-bottom:6px;text-transform:uppercase;letter-spacing:.1em;">
+      <span>Current Drawdown</span><span style="color:${ddColor};font-weight:700;">${currentDD>0?'-$'+currentDD.toFixed(2)+' ('+currentDDPct.toFixed(1)+'%)':'✓ At Peak'}</span>
+    </div>
+    <div style="background:var(--bg-3);border-radius:6px;height:10px;overflow:hidden;">
+      <div style="height:100%;width:${ddBarPct}%;background:${ddColor};border-radius:6px;transition:width .4s;"></div>
+    </div>
+  </div>`;
+  // Stat grid
+  html+=`<div style="display:grid;grid-template-columns:repeat(3,1fr);gap:8px;">`;
+  const stats=[
+    {k:'Max Drawdown $',v:maxDD>0?'-$'+maxDD.toFixed(2):'$0',c:maxDD>0?'var(--red)':'var(--green)'},
+    {k:'Max DD %',v:maxDD>0?'-'+maxDDPct.toFixed(1)+'%':'0%',c:maxDD>0?'var(--red)':'var(--green)'},
+    {k:'Max Consec Loss',v:maxConsecLoss,c:maxConsecLoss>=3?'var(--red)':maxConsecLoss>=2?'var(--gold)':'var(--text-0)'},
+    {k:'Avg Win $',v:avgWin>0?'+$'+avgWin.toFixed(2):'—',c:'var(--green)'},
+    {k:'Avg Loss $',v:avgLoss>0?'-$'+avgLoss.toFixed(2):'—',c:'var(--red)'},
+    {k:'Win/Loss Ratio',v:avgLoss>0?(avgWin/avgLoss).toFixed(2)+'x':'—',c:avgLoss>0&&avgWin/avgLoss>=1?'var(--gold)':'var(--text-1)'},
+  ];
+  stats.forEach(s=>html+=`<div style="background:var(--bg-3);border:1px solid var(--border);border-radius:8px;padding:10px;"><div style="font-size:8px;color:var(--text-2);text-transform:uppercase;letter-spacing:.08em;margin-bottom:4px;">${s.k}</div><div style="font-size:15px;font-weight:700;font-family:monospace;color:${s.c};">${s.v}</div></div>`);
+  html+=`</div>`;
+  // Mini bar chart - consecutive outcomes
+  html+=`<div><div style="font-size:9px;color:var(--text-2);text-transform:uppercase;letter-spacing:.1em;margin-bottom:6px;">Trade Outcomes (ล่าสุด ${Math.min(n,30)} trades)</div>`;
+  html+=`<div style="display:flex;gap:3px;flex-wrap:wrap;">`;
+  t.slice(-30).forEach(tr=>{
+    const c=tr.outcome==='WIN'?'#2dd4a0':tr.outcome==='LOSS'?'#f05c5c':'#9ba8bb';
+    html+=`<div title="${tr.date} ${tr.outcome} ${tr.pnl>=0?'+':''}$${Math.abs(tr.pnl).toFixed(2)}" style="width:16px;height:28px;border-radius:3px;background:${c}22;border:1px solid ${c}66;display:flex;align-items:flex-end;overflow:hidden;"><div style="width:100%;background:${c};height:${tr.outcome==='WIN'?'100':tr.outcome==='LOSS'?'60':'30'}%;"></div></div>`;
+  });
+  html+=`</div></div>`;
+  html+=`</div>`;
+  container.innerHTML=html;
+}
+
+/* CHART SIZE & DRAG — kept for compatibility but unused */
+function setChartSize(){}
+function initChartDrag(){}
 function renderTagPerformance(){
   const grid=document.getElementById('tagPerfGrid');const perf={};
   state.trades.forEach(t=>{(t.tags||[]).forEach(tag=>{if(!perf[tag])perf[tag]={wins:0,total:0,pnl:0};perf[tag].total++;if(t.outcome==='WIN')perf[tag].wins++;perf[tag].pnl+=t.pnl;});});
@@ -1436,25 +1611,20 @@ function renderTagPairs(){
   grid.innerHTML=pairs.slice(0,20).map(([k,v])=>{const [t1,t2]=k.split('|||');const wr=Math.round((v.wins/v.total)*100);return`<div class="tpaic ${wr>=60?'hot':wr<40?'cold':''}"><div class="tpaitags"><span class="tpaitag">${t1}</span><span style="font-size:10px;color:var(--text-2)">+</span><span class="tpaitag">${t2}</span></div><div class="tpaists"><div class="tpaiwr ${wr>=50?'good':'bad'}">${wr}%</div><div class="tpaimeta">${v.wins}W/${v.total-v.wins}L · ${v.total}<br>${(v.pnl>=0?'+':'')+'$'+v.pnl.toFixed(2)}</div></div></div>`;}).join('');
 }
 
-/* CHART SIZE & DRAG */
-function setChartSize(px,key){const w=document.getElementById('chartWrap');w.style.height=px+'px';['s','m','l','xl'].forEach(k=>{const b=document.getElementById('csb-'+k);if(b)b.classList.toggle('active',k===key);});setTimeout(renderEquity,320);}
-function initChartDrag(){
-  let dr=false,sy=0,sh=0;
-  const h=document.getElementById('chartDragHandle');const w=document.getElementById('chartWrap');if(!h||!w)return;
-  const onS=y=>{dr=true;sy=y;sh=w.offsetHeight;document.body.style.userSelect='none';};
-  const onM=y=>{if(!dr)return;const nh=Math.min(520,Math.max(120,sh+(y-sy)));w.style.height=nh+'px';['s','m','l','xl'].forEach(k=>{const b=document.getElementById('csb-'+k);if(b)b.classList.remove('active');});};
-  const onE=()=>{if(dr){dr=false;document.body.style.userSelect='';renderEquity();}};
-  h.addEventListener('mousedown',e=>{onS(e.clientY);e.preventDefault();});
-  document.addEventListener('mousemove',e=>onM(e.clientY));document.addEventListener('mouseup',onE);
-  h.addEventListener('touchstart',e=>{onS(e.touches[0].clientY);},{passive:true});
-  document.addEventListener('touchmove',e=>{if(dr){onM(e.touches[0].clientY);e.preventDefault();}},{passive:false});
-  document.addEventListener('touchend',onE);
-}
 
 /* STORAGE */
 const LS_KEY='xauusd_smc_trades_v1';
-function saveToStorage(){try{localStorage.setItem(LS_KEY,JSON.stringify(state.trades));updateSBdg(true);}catch(e){showToast('err','Storage เต็ม — Export ก่อน');}}
-function loadFromStorage(){try{const raw=localStorage.getItem(LS_KEY);if(!raw)return;const parsed=JSON.parse(raw);if(Array.isArray(parsed)&&parsed.length){state.trades=parsed;renderLog();renderStats();renderEquity();renderTagPerformance();renderExpTracker();renderExpFilterTags();renderTagPairs();renderCalendar();renderWeeklyReflections();showToast('ok',`โหลด ${parsed.length} trades`);}}catch(e){showToast('err','โหลดไม่สำเร็จ');}}
+function saveToStorage(){
+  try{
+    const data=JSON.stringify(state.trades);
+    localStorage.setItem(LS_KEY,data);
+    updateSBdg(true);
+    // Warn if storage is large (images)
+    const kb=Math.round(data.length/1024);
+    if(kb>3000)showToast('info',`Storage ใหญ่ ${kb}KB — แนะนำ Export สำรอง`);
+  }catch(e){showToast('err','Storage เต็ม — Export ก่อนเพิ่มรูปใหม่');}
+}
+function loadFromStorage(){try{const raw=localStorage.getItem(LS_KEY);if(!raw)return;const parsed=JSON.parse(raw);if(Array.isArray(parsed)&&parsed.length){state.trades=parsed;renderLog();renderStats();renderDashboard();renderTagPerformance();renderExpTracker();renderExpFilterTags();renderTagPairs();renderCalendar();renderWeeklyReflections();showToast('ok',`โหลด ${parsed.length} trades`);}}catch(e){showToast('err','โหลดไม่สำเร็จ');}}
 function updateSBdg(s){document.getElementById('storageDot').style.background=s?'var(--green)':'var(--gold)';document.getElementById('storageInfo').textContent=`Saved · ${state.trades.length} trades`;}
 
 /* EXPORT/IMPORT */
@@ -1463,12 +1633,12 @@ function exportJSON(){if(!state.trades.length){showToast('info','ยังไม
 async function copyCSV(){if(!state.trades.length){showToast('info','ยังไม่มี trade');return;}const h=['#','Date','Dir','Session','Experiment','Entry','SL$','TP$','RR','Lot','Lev','Risk%','Risk$','Tags','Outcome','PnL($)'];const rows=state.trades.map(t=>[t.no,t.date,t.dir,t.session,t.expName||'',t.entry,t.sl,t.tp,t.rr,t.lot,t.leverage,t.riskPct,t.riskAmt||'',(t.tags||[]).join(' | '),t.outcome,t.pnl.toFixed(2)]);await clip([h.join('\t'),...rows.map(r=>r.join('\t'))].join('\n'),`Copy CSV — ${state.trades.length} trades`);}
 async function copyJSON(){if(!state.trades.length){showToast('info','ยังไม่มี trade');return;}await clip(JSON.stringify({exportedAt:new Date().toISOString(),version:'2.0-lab',trades:state.trades},null,2),'Copy JSON');}
 async function clip(text,msg){try{if(navigator.clipboard&&navigator.clipboard.writeText){await navigator.clipboard.writeText(text);showToast('ok',msg);}else{const ta=document.createElement('textarea');ta.value=text;ta.style.cssText='position:fixed;opacity:0;';document.body.appendChild(ta);ta.focus();ta.select();document.execCommand('copy');document.body.removeChild(ta);showToast('ok',msg);}}catch(err){showCopyMdl(text);}}
-function importJSON(ev){const file=ev.target.files[0];if(!file)return;const r=new FileReader();r.onload=e=>{try{const p=JSON.parse(e.target.result);const inc=Array.isArray(p)?p:(p.trades||[]);if(!inc.length){showToast('err','ไม่พบข้อมูล');return;}const ex=new Set(state.trades.map(t=>t.id));const nt=inc.filter(t=>!ex.has(t.id));state.trades=[...state.trades,...nt];state.trades.forEach((t,i)=>t.no=i+1);saveToStorage();renderLog();renderStats();renderEquity();renderTagPerformance();renderExpTracker();renderExpFilterTags();renderTagPairs();renderCalendar();renderWeeklyReflections();showToast('ok',`Import — เพิ่ม ${nt.length} trades`);}catch(err){showToast('err','ไฟล์ไม่ถูกต้อง');}ev.target.value='';};r.readAsText(file);}
+function importJSON(ev){const file=ev.target.files[0];if(!file)return;const r=new FileReader();r.onload=e=>{try{const p=JSON.parse(e.target.result);const inc=Array.isArray(p)?p:(p.trades||[]);if(!inc.length){showToast('err','ไม่พบข้อมูล');return;}const ex=new Set(state.trades.map(t=>t.id));const nt=inc.filter(t=>!ex.has(t.id));state.trades=[...state.trades,...nt];state.trades.forEach((t,i)=>t.no=i+1);saveToStorage();renderLog();renderStats();renderDashboard();renderTagPerformance();renderExpTracker();renderExpFilterTags();renderTagPairs();renderCalendar();renderWeeklyReflections();showToast('ok',`Import — เพิ่ม ${nt.length} trades`);}catch(err){showToast('err','ไฟล์ไม่ถูกต้อง');}ev.target.value='';};r.readAsText(file);}
 
 /* MODALS */
 function hideMdl(id){document.getElementById(id).classList.remove('show');}
 function showClearModal(){document.getElementById('clearModal').classList.add('show');}
-function clearAllTrades(){state.trades=[];localStorage.removeItem(LS_KEY);hideMdl('clearModal');renderLog();renderStats();renderEquity();renderTagPerformance();renderExpTracker();renderExpFilterTags();renderTagPairs();renderCalendar();renderWeeklyReflections();document.getElementById('storageDot').style.background='var(--text-2)';document.getElementById('storageInfo').textContent='Auto-save ON';showToast('info','เคลียข้อมูลแล้ว');}
+function clearAllTrades(){state.trades=[];localStorage.removeItem(LS_KEY);hideMdl('clearModal');renderLog();renderStats();renderDashboard();renderTagPerformance();renderExpTracker();renderExpFilterTags();renderTagPairs();renderCalendar();renderWeeklyReflections();document.getElementById('storageDot').style.background='var(--text-2)';document.getElementById('storageInfo').textContent='Auto-save ON';showToast('info','เคลียข้อมูลแล้ว');}
 function editInstrument(){document.getElementById('instrumentInput').value=instrumentName;document.getElementById('instrumentModal').classList.add('show');setTimeout(()=>{const i=document.getElementById('instrumentInput');i.focus();i.select();},100);}
 function saveInstrument(){const v=(document.getElementById('instrumentInput').value.trim().toUpperCase())||'XAUUSD';instrumentName=v;localStorage.setItem('smc_instrument',v);document.getElementById('instrumentName').textContent=v;hideMdl('instrumentModal');showToast('ok',`Instrument → ${v}`);}
 function openEditNote(id){const t=state.trades.find(x=>x.id===id);if(!t)return;document.getElementById('editNoteTradeId').value=id;document.getElementById('editNoteText').value=t.note||'';const dur=t.duration||'';const hm=dur.match(/(\d+)h/);const mm=dur.match(/(\d+)m/);document.getElementById('editHours').value=hm?hm[1]:'';document.getElementById('editMinutes').value=mm?mm[1]:'';document.getElementById('editNoteModal').classList.add('show');setTimeout(()=>document.getElementById('editNoteText').focus(),100);}
