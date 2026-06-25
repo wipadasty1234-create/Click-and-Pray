@@ -477,13 +477,21 @@ body{background:var(--bg-0);color:var(--text-0);font-family:-apple-system,BlinkM
   <div class="dtb">
     <div class="sbdg"><div class="sdot" id="storageDot"></div><span id="storageInfo">Auto-save ON</span></div>
     <div class="tsep"></div>
-    <button class="tb g" onclick="exportCSV()">⬇ CSV</button>
-    <button class="tb g" onclick="exportJSON()">⬇ JSON</button>
-    <button class="tb a" onclick="copyCSV()">📋 Copy CSV</button>
-    <button class="tb a" onclick="copyJSON()">📋 Copy JSON</button>
-    <label class="tb" style="cursor:pointer;color:var(--text-1);">⬆ Import<input type="file" accept=".json" onchange="importJSON(event)" style="display:none"/></label>
-    <div class="tsep"></div>
-    <button class="tb d" onclick="showClearModal()">🗑 Clear All</button>
+    <!-- Hamburger Menu -->
+    <div style="position:relative;" id="hamburgerWrap">
+      <button class="tb" id="hamburgerBtn" onclick="toggleHamburger()" title="Menu" style="font-size:14px;padding:5px 10px;">☰</button>
+      <div id="hamburgerMenu" style="display:none;position:absolute;right:0;top:calc(100% + 6px);background:var(--bg-2);border:1px solid var(--border-light);border-radius:10px;box-shadow:0 8px 32px rgba(0,0,0,.5);min-width:200px;z-index:200;overflow:hidden;">
+        <div style="padding:8px 12px;font-size:9px;color:var(--text-2);text-transform:uppercase;letter-spacing:.12em;border-bottom:1px solid var(--border);">📤 Export</div>
+        <button class="hmitem g" onclick="exportCSV();toggleHamburger()">⬇ Download CSV</button>
+        <button class="hmitem g" onclick="exportJSON();toggleHamburger()">⬇ Download JSON</button>
+        <button class="hmitem a" onclick="copyCSV();toggleHamburger()">📋 Copy CSV</button>
+        <button class="hmitem a" onclick="copyJSON();toggleHamburger()">📋 Copy JSON</button>
+        <div style="padding:8px 12px;font-size:9px;color:var(--text-2);text-transform:uppercase;letter-spacing:.12em;border-top:1px solid var(--border);border-bottom:1px solid var(--border);">📥 Import</div>
+        <label class="hmitem" style="cursor:pointer;">⬆ Import JSON<input type="file" accept=".json" onchange="importJSON(event);toggleHamburger()" style="display:none"/></label>
+        <div style="padding:8px 12px;font-size:9px;color:var(--text-2);text-transform:uppercase;letter-spacing:.12em;border-top:1px solid var(--border);border-bottom:1px solid var(--border);">⚠️ Danger Zone</div>
+        <button class="hmitem d" onclick="showClearModal();toggleHamburger()">🗑 Clear All Trades</button>
+      </div>
+    </div>
   </div>
 </div>
 
@@ -498,6 +506,7 @@ body{background:var(--bg-0);color:var(--text-0);font-family:-apple-system,BlinkM
     <div class="ss" id="statGrowthSub">set starting balance</div>
   </div>
   <div class="si"><div class="sl">Exp. Value</div><div class="sv gld" id="statEV">—</div><div class="ss">per trade</div></div>
+  <div class="si"><div class="sl">Expectancy</div><div class="sv gld" id="statExpectancy">—</div><div class="ss" id="statExpectancySub">EV/Trade</div></div>
   <div class="si"><div class="sl">Max Win Streak</div><div class="sv neu" id="statStreak">0</div><div class="ss" id="statMaxLoss">Max Loss: 0</div></div>
   <div class="si"><div class="sl">Current Streak</div><div class="sv neu" id="statCurrentStreak">—</div><div class="ss" id="statCurrentStreakSub">no trades</div></div>
   <div class="si"><div class="sl">Avg R:R</div><div class="sv gld" id="statAvgRR">—</div></div>
@@ -623,7 +632,7 @@ body{background:var(--bg-0);color:var(--text-0);font-family:-apple-system,BlinkM
     <div class="detail-fields">
     <div class="fr">
       <div class="fg"><label class="flbl">Entry Price ($)</label><input type="number" class="finp" id="entryPrice" value="3300.00" step="0.01" oninput="calcSLTP()"/></div>
-      <div class="fg"><label class="flbl">SL Distance ($)</label><input type="number" class="finp" id="slDist" value="5" step="0.5" min="0.1" oninput="calcSLTP()"/></div>
+      <div class="fg"><label class="flbl">SL Distance (point) <span style="color:var(--text-2);cursor:help;" title="Distance between entry and stop loss">ⓘ</span></label><input type="number" class="finp" id="slDist" value="5" step="0.5" min="0.1" oninput="calcSLTP()"/></div>
     </div>
     <div class="fr">
       <div class="fg"><label class="flbl">Fibo Zone</label>
@@ -727,9 +736,52 @@ body{background:var(--bg-0);color:var(--text-0);font-family:-apple-system,BlinkM
     </div>
   </div>
 
+  <!-- MISTAKE TRACKER -->
+  <div class="sec detail-fields" id="mistakeSec">
+    <div class="stitle">🚨 Mistake Tracker</div>
+    <div style="font-size:9px;color:var(--text-2);margin-bottom:10px;">เช็คความผิดพลาดที่เกิดขึ้นใน trade นี้</div>
+    <div id="mistakeList" style="display:flex;flex-direction:column;gap:8px;">
+      <label style="display:flex;align-items:center;gap:8px;font-size:11px;color:var(--text-1);cursor:pointer;"><input type="checkbox" class="mistake-cb" value="FOMO Entry" style="accent-color:var(--red);width:14px;height:14px;"> FOMO Entry — เข้าเพราะกลัวตกรถ</label>
+      <label style="display:flex;align-items:center;gap:8px;font-size:11px;color:var(--text-1);cursor:pointer;"><input type="checkbox" class="mistake-cb" value="Moved SL" style="accent-color:var(--red);width:14px;height:14px;"> Moved SL — ขยับ SL ออก</label>
+      <label style="display:flex;align-items:center;gap:8px;font-size:11px;color:var(--text-1);cursor:pointer;"><input type="checkbox" class="mistake-cb" value="Early Exit" style="accent-color:var(--red);width:14px;height:14px;"> Early Exit — ปิดก่อน TP โดยไม่มีเหตุผล</label>
+      <label style="display:flex;align-items:center;gap:8px;font-size:11px;color:var(--text-1);cursor:pointer;"><input type="checkbox" class="mistake-cb" value="Oversize" style="accent-color:var(--red);width:14px;height:14px;"> Oversize — Lot ใหญ่เกิน Risk %</label>
+      <label style="display:flex;align-items:center;gap:8px;font-size:11px;color:var(--text-1);cursor:pointer;"><input type="checkbox" class="mistake-cb" value="No Setup" style="accent-color:var(--red);width:14px;height:14px;"> No Setup — เปิดโดยไม่มี setup ชัดเจน</label>
+      <label style="display:flex;align-items:center;gap:8px;font-size:11px;color:var(--text-1);cursor:pointer;"><input type="checkbox" class="mistake-cb" value="Revenge Trade" style="accent-color:var(--red);width:14px;height:14px;"> Revenge Trade — เปิดเพื่อเอาคืน</label>
+      <label style="display:flex;align-items:center;gap:8px;font-size:11px;color:var(--text-1);cursor:pointer;"><input type="checkbox" class="mistake-cb" value="MTF Misaligned" style="accent-color:var(--red);width:14px;height:14px;"> MTF Misaligned — Bias ไม่ตรงกัน</label>
+      <label style="display:flex;align-items:center;gap:8px;font-size:11px;color:var(--text-1);cursor:pointer;"><input type="checkbox" class="mistake-cb" value="Ignored News" style="accent-color:var(--red);width:14px;height:14px;"> Ignored News — เข้าตอน High Impact News</label>
+    </div>
+    <div id="mistakeCount" style="margin-top:10px;font-size:10px;color:var(--text-2);"></div>
+  </div>
+
   <!-- NOTE & OUTCOME -->
   <div class="sec">
     <div class="stitle">Note & Outcome</div>
+    <div class="detail-fields" style="margin-top:8px;">
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:8px;">
+        <div class="fg">
+          <label class="flbl">⭐ Trade Quality Score <span style="color:var(--text-2);font-size:8px;">(Process)</span></label>
+          <div style="display:flex;gap:4px;margin-top:4px;flex-wrap:wrap;" id="tradeQualityBtns">
+            <button class="rrc" onclick="setTradeQuality(1)">1</button>
+            <button class="rrc" onclick="setTradeQuality(2)">2</button>
+            <button class="rrc" onclick="setTradeQuality(3)">3</button>
+            <button class="rrc" onclick="setTradeQuality(4)">4</button>
+            <button class="rrc" onclick="setTradeQuality(5)">5</button>
+          </div>
+          <div id="tradeQualityLabel" style="font-size:9px;color:var(--text-2);margin-top:4px;">คุณภาพ Process/Setup (1=แย่, 5=ดีมาก)</div>
+        </div>
+        <div class="fg">
+          <label class="flbl">🎯 Result Quality Score <span style="color:var(--text-2);font-size:8px;">(Outcome)</span></label>
+          <div style="display:flex;gap:4px;margin-top:4px;flex-wrap:wrap;" id="resultQualityBtns">
+            <button class="rrc" onclick="setResultQuality(1)">1</button>
+            <button class="rrc" onclick="setResultQuality(2)">2</button>
+            <button class="rrc" onclick="setResultQuality(3)">3</button>
+            <button class="rrc" onclick="setResultQuality(4)">4</button>
+            <button class="rrc" onclick="setResultQuality(5)">5</button>
+          </div>
+          <div id="resultQualityLabel" style="font-size:9px;color:var(--text-2);margin-top:4px;">คุณภาพ Result จริง (1=แย่, 5=ดีมาก)</div>
+        </div>
+      </div>
+    </div>
     <div class="detail-fields">
     <div class="fg" style="margin-bottom:6px;">
       <label class="flbl">⏱ Duration</label>
@@ -783,13 +835,16 @@ body{background:var(--bg-0);color:var(--text-0);font-family:-apple-system,BlinkM
 
   <!-- CHECKLIST -->
   <div class="sec detail-fields">
-    <div class="stitle">🙏 Pray Meter</div>
+    <div class="stitle">🎯 Confident Score</div>
     <div class="slbl" style="align-items:flex-start;flex-direction:column;gap:4px;">
       <div style="display:flex;align-items:center;justify-content:space-between;width:100%;">
         <span id="prayEmoji" style="font-size:18px;letter-spacing:2px;line-height:1;">—</span>
         <span id="checkScore" style="color:var(--gold);font-weight:700;font-family:monospace;font-size:13px;">—</span>
       </div>
       <div id="prayLabel" style="font-size:9px;color:var(--text-2);letter-spacing:.05em;">กรอก setup ก่อน</div>
+      <div id="clickAndPrayWarn" style="display:none;align-items:center;gap:6px;background:#2a0808;border:1px solid var(--red);border-radius:6px;padding:7px 10px;font-size:11px;color:var(--red);font-weight:700;margin-top:4px;width:100%;">
+        ⚠️ You are about to click and pray
+      </div>
     </div>
     <div class="sbar" style="margin-top:6px;"><div class="sbarfill" id="scoreBar" style="width:0%"></div></div>
     <div class="chklist" id="checkList" style="margin-top:12px;"></div>
@@ -827,6 +882,7 @@ body{background:var(--bg-0);color:var(--text-0);font-family:-apple-system,BlinkM
       <div style="display:flex;align-items:center;gap:8px;">
         <div class="csbrow">
           <button class="csb active" id="dash-wr" onclick="setDashTab('wr')">Rolling WR</button>
+          <button class="csb" id="dash-ec" onclick="setDashTab('ec')">Equity Curve</button>
           <button class="csb" id="dash-hm" onclick="setDashTab('hm')">PnL Heatmap</button>
           <button class="csb" id="dash-dd" onclick="setDashTab('dd')">Drawdown</button>
         </div>
@@ -836,6 +892,10 @@ body{background:var(--bg-0);color:var(--text-0);font-family:-apple-system,BlinkM
       <!-- Rolling Win Rate -->
       <div id="dash-panel-wr" class="chwrap" style="height:220px;">
         <div class="charea"><canvas id="wrCanvas"></canvas><div class="nodata" id="wrNoData">No trades yet</div></div>
+      </div>
+      <!-- Equity Curve -->
+      <div id="dash-panel-ec" style="display:none;" class="chwrap" style="height:220px;">
+        <div class="charea"><canvas id="ecCanvas"></canvas><div class="nodata" id="ecNoData">No trades yet</div></div>
       </div>
       <!-- PnL Heatmap -->
       <div id="dash-panel-hm" style="display:none;padding:12px 14px;">
@@ -977,7 +1037,7 @@ body{background:var(--bg-0);color:var(--text-0);font-family:-apple-system,BlinkM
       <div class="ef-grp"><label class="ef-lbl">Session</label>
         <select class="ef-sel" id="etSession"><option>London</option><option>New York</option><option>Asian</option><option>London/NY Overlap</option></select></div>
       <div class="ef-grp"><label class="ef-lbl">Entry Price ($)</label><input type="number" class="ef-inp" id="etEntry" step="0.01"/></div>
-      <div class="ef-grp"><label class="ef-lbl">SL Distance ($)</label><input type="number" class="ef-inp" id="etSL" step="0.01" min="0.01"/></div>
+      <div class="ef-grp"><label class="ef-lbl">SL Distance (point) <span style="color:var(--text-2);cursor:help;" title="Distance between entry and stop loss">ⓘ</span></label><input type="number" class="ef-inp" id="etSL" step="0.01" min="0.01"/></div>
       <div class="ef-grp"><label class="ef-lbl">R:R Target</label><input type="number" class="ef-inp" id="etRR" step="0.5" min="0.5"/></div>
       <div class="ef-grp"><label class="ef-lbl">Actual Exit Price ($)</label><input type="number" class="ef-inp" id="etExitPrice" step="0.01" placeholder="optional"/></div>
       <div class="ef-grp"><label class="ef-lbl">Lot Size</label><input type="number" class="ef-inp" id="etLot" step="0.01" min="0.01"/></div>
