@@ -622,12 +622,15 @@ body{background:var(--bg-0);color:var(--text-0);font-family:-apple-system,BlinkM
         <select class="fsel" id="tradeSession">
           <option>London</option><option>New York</option><option>Asian</option><option>London/NY Overlap</option>
         </select></div>
-      <div class="fg detail-fields"><label class="flbl">Actual Exit Price ($)</label><input type="number" class="finp" id="actualExitPrice" placeholder="ถ้า close ก่อน TP" step="0.01" oninput="calcRealizedRR()"/></div>
+      <div class="fg"><label class="flbl">Risk % <span style="color:var(--text-2);font-size:8px;">(optional)</span></label><input type="number" class="finp" id="qaRiskPct" placeholder="1" step="0.1" min="0.1" max="20"/></div>
     </div>
     <!-- QUICK ADD: PnL direct input -->
     <div class="fr qa-fields" id="qaPnlRow">
       <div class="fg"><label class="flbl">PnL จริง ($) <span style="color:var(--gold);">*</span></label><input type="number" class="finp" id="qaPnl" placeholder="เช่น 45.50 หรือ -20" step="0.01"/></div>
-      <div class="fg"><label class="flbl">Risk % (optional)</label><input type="number" class="finp" id="qaRiskPct" placeholder="1" step="0.1" min="0.1" max="20"/></div>
+    </div>
+    <!-- Actual Exit Price (detail mode only) -->
+    <div class="fr detail-fields">
+      <div class="fg"><label class="flbl">Actual Exit Price ($) <span style="color:var(--text-2);font-size:8px;">ถ้า close ก่อน TP</span></label><input type="number" class="finp" id="actualExitPrice" placeholder="เช่น 3315.50" step="0.01" oninput="calcRealizedRR()"/></div>
     </div>
     <div class="detail-fields">
     <div class="fr">
@@ -1235,6 +1238,9 @@ function updateChecklist(){
     {l:`R:R ≥ 1:${state.lab.rr}`,p:rr>=state.lab.rr},
     {l:`Risk ≤ 2% (ตั้งที่ ${rp}%)`,p:rp<=2&&rp>0},
     {l:'SMC Tags ≥ 2',p:state.activeTags.length>=2},
+  ];
+  // items แสดงใน checklist แต่ไม่นับ score (แสดงสถานะอย่างเดียว)
+  const infoItems=[
     {l:'Portfolio ตั้งชื่อแล้ว',p:!!state.lab.name},
     {l:'Outcome ระบุแล้ว',p:!!state.outcome},
   ];
@@ -1256,7 +1262,9 @@ function updateChecklist(){
   document.getElementById('checkScore').style.color=prayColor;
   document.getElementById('scoreBar').style.width=pct+'%';
   document.getElementById('scoreBar').style.background=pct>=75?'linear-gradient(90deg,var(--green-dim),var(--green))':pct>=50?'linear-gradient(90deg,var(--gold-dim),var(--gold))':'linear-gradient(90deg,var(--red-dim),var(--red))';
-  document.getElementById('checkList').innerHTML=items.map(i=>`<div class="chkitem"><div class="chkdot ${i.p?'pass':'fail'}"></div><span>${i.l}</span></div>`).join('');
+  document.getElementById('checkList').innerHTML=
+    items.map(i=>`<div class="chkitem"><div class="chkdot ${i.p?'pass':'fail'}"></div><span>${i.l}</span></div>`).join('')+
+    (infoItems.some(i=>true)?`<div style="border-top:1px solid var(--border);margin:6px 0;"></div>`+infoItems.map(i=>`<div class="chkitem"><div class="chkdot ${i.p?'pass':'fail'}" style="opacity:.6;"></div><span style="color:var(--text-2);">${i.l}</span></div>`).join(''):'');
 }
 
 /* TAGS */
@@ -1838,7 +1846,7 @@ function dismissRage(){
 let currentDashTab='wr';
 function setDashTab(tab){
   currentDashTab=tab;
-  ['wr','hm','dd'].forEach(t=>{
+  ['wr','ec','hm','dd'].forEach(t=>{
     const btn=document.getElementById('dash-'+t);
     const panel=document.getElementById('dash-panel-'+t);
     if(btn)btn.classList.toggle('active',t===tab);
@@ -1849,6 +1857,7 @@ function setDashTab(tab){
 }
 function renderDashboard(){
   if(currentDashTab==='wr')renderRollingWR();
+  else if(currentDashTab==='ec')renderEquityCurve();
   else if(currentDashTab==='hm')renderHeatmap();
   else if(currentDashTab==='dd')renderDrawdown();
 }
@@ -1906,6 +1915,63 @@ function renderRollingWR(){
   ctx.fillText(`Rolling ${Math.min(WINDOW,n)}-trade Win Rate`,pad.l,pad.t-4);
   const lastWR=pts[pts.length-1].wr;ctx.fillStyle=lastWR>=50?'#2dd4a0':'#f05c5c';
   ctx.textAlign='right';ctx.fillText(`Latest: ${lastWR.toFixed(0)}%`,W-pad.r,pad.t-4);
+}
+
+/* Equity Curve */
+function renderEquityCurve(){
+  const canvas=document.getElementById('ecCanvas');const nd=document.getElementById('ecNoData');
+  if(!state.trades.length){nd.style.display='flex';canvas.style.display='none';return;}
+  nd.style.display='none';canvas.style.display='block';
+  const par=canvas.parentElement;const W=par.offsetWidth||600;const H=par.offsetHeight||220;
+  canvas.width=W;canvas.height=H;const ctx=canvas.getContext('2d');
+  ctx.clearRect(0,0,W,H);
+  const t=state.trades;const n=t.length;
+  // Build cumulative PnL points starting at 0
+  const pts=[{x:-1,cum:0}];let cum=0;
+  t.forEach((tr,i)=>{cum+=tr.pnl;pts.push({x:i,cum,outcome:tr.outcome,pnl:tr.pnl,no:tr.no});});
+  const allVals=pts.map(p=>p.cum);const minV=Math.min(...allVals);const maxV=Math.max(...allVals);
+  const pad={t:18,b:30,l:56,r:16};const cw=W-pad.l-pad.r;const ch=H-pad.t-pad.b;
+  const range=maxV-minV||1;
+  const toX=i=>pad.l+(i+1)/(n)*cw;
+  const toY=v=>pad.t+ch-((v-minV)/range)*ch;
+  // Grid lines
+  const steps=4;for(let i=0;i<=steps;i++){
+    const v=minV+(range/steps)*i;const y=toY(v);
+    ctx.strokeStyle=Math.abs(v)<0.01?'#3a4a60':'#1a2030';ctx.lineWidth=Math.abs(v)<0.01?1.5:1;
+    ctx.beginPath();ctx.moveTo(pad.l,y);ctx.lineTo(W-pad.r,y);ctx.stroke();
+    ctx.fillStyle=Math.abs(v)<0.01?'#5b9cf6':'#5f6e83';ctx.font='9px Consolas,monospace';ctx.textAlign='right';
+    ctx.fillText((v>=0?'+':'')+'$'+Math.abs(v).toFixed(0),pad.l-4,y+3);
+  }
+  // Zero line if in range
+  if(minV<0&&maxV>0){const y=toY(0);ctx.strokeStyle='#3a4a60';ctx.lineWidth=1;ctx.setLineDash([4,4]);ctx.beginPath();ctx.moveTo(pad.l,y);ctx.lineTo(W-pad.r,y);ctx.stroke();ctx.setLineDash([]);}
+  if(n<1)return;
+  // Gradient fill under curve
+  const lastY=toY(pts[pts.length-1].cum);const zeroY=toY(0);
+  const g=ctx.createLinearGradient(0,pad.t,0,H-pad.b);
+  if(pts[pts.length-1].cum>=0){g.addColorStop(0,'rgba(45,212,160,0.25)');g.addColorStop(1,'rgba(45,212,160,0)');}
+  else{g.addColorStop(0,'rgba(240,92,92,0)');g.addColorStop(1,'rgba(240,92,92,0.25)');}
+  ctx.beginPath();ctx.moveTo(pad.l,toY(0));
+  pts.slice(1).forEach(p=>ctx.lineTo(toX(p.x),toY(p.cum)));
+  ctx.lineTo(toX(pts[pts.length-1].x),toY(0));ctx.closePath();ctx.fillStyle=g;ctx.fill();
+  // Curve line
+  ctx.beginPath();ctx.lineWidth=2;ctx.lineJoin='round';ctx.strokeStyle='#38bdf8';
+  ctx.moveTo(pad.l,toY(0));
+  pts.slice(1).forEach(p=>ctx.lineTo(toX(p.x),toY(p.cum)));
+  ctx.stroke();
+  // Outcome dots
+  pts.slice(1).forEach(p=>{
+    const x=toX(p.x);const y=toY(p.cum);
+    ctx.beginPath();ctx.arc(x,y,3,0,Math.PI*2);
+    ctx.fillStyle=p.outcome==='WIN'?'#2dd4a0':p.outcome==='LOSS'?'#f05c5c':'#9ba8bb';ctx.fill();
+  });
+  // X labels
+  ctx.fillStyle='#5f6e83';ctx.font='9px system-ui';ctx.textAlign='center';
+  pts.slice(1).forEach((p,i)=>{if(i%Math.max(1,Math.floor(n/8))===0)ctx.fillText('#'+p.no,toX(p.x),H-8);});
+  // Legend
+  const finalPnL=pts[pts.length-1].cum;
+  ctx.fillStyle='#5f6e83';ctx.font='9px system-ui';ctx.textAlign='left';ctx.fillText('Equity Curve (Cumulative PnL)',pad.l,pad.t-4);
+  ctx.fillStyle=finalPnL>=0?'#2dd4a0':'#f05c5c';ctx.textAlign='right';
+  ctx.fillText((finalPnL>=0?'+':'')+'$'+finalPnL.toFixed(2),W-pad.r,pad.t-4);
 }
 
 /* PnL Heatmap (daily) */
