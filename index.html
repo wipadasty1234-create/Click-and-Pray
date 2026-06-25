@@ -1044,6 +1044,8 @@ body{background:var(--bg-0);color:var(--text-0);font-family:-apple-system,BlinkM
       <div class="ef-grp"><label class="ef-lbl">Risk %</label><input type="number" class="ef-inp" id="etRiskPct" step="0.1" min="0.1"/></div>
       <div class="ef-grp"><label class="ef-lbl">MAE ($)</label><input type="number" class="ef-inp" id="etMae" step="0.01" min="0" placeholder="0.00"/></div>
       <div class="ef-grp"><label class="ef-lbl">MFE ($)</label><input type="number" class="ef-inp" id="etMfe" step="0.01" min="0" placeholder="0.00"/></div>
+      <div class="ef-grp"><label class="ef-lbl">⭐ Trade Quality (1-5)</label><input type="number" class="ef-inp" id="etTradeQuality" step="1" min="1" max="5" placeholder="optional"/></div>
+      <div class="ef-grp"><label class="ef-lbl">🎯 Result Quality (1-5)</label><input type="number" class="ef-inp" id="etResultQuality" step="1" min="1" max="5" placeholder="optional"/></div>
     </div>
     <div style="margin-bottom:8px;"><label class="ef-lbl">Outcome</label>
       <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:6px;margin-top:6px;">
@@ -1085,7 +1087,7 @@ const LAB_WF=[
   {t:'Analyze ≥20',d:'ดู WR/EV/Tag Performance หลัง ≥20 trades'},
 ];
 
-let state={direction:'BUY',outcome:null,activeTags:[],trades:[],tfBias:{0:'bull',1:'bull',2:'bull'},logFilter:'ALL',logView:'card',lab:{name:'',tf:['D1','H4','H1'],rr:3,riskPct:1,hypothesis:''}};
+let state={direction:'BUY',outcome:null,activeTags:[],trades:[],tfBias:{0:'bull',1:'bull',2:'bull'},logFilter:'ALL',logView:'card',lab:{name:'',tf:['D1','H4','H1'],rr:3,riskPct:1,hypothesis:''},tradeQuality:null,resultQuality:null};
 let currentLeverage=100;
 let instrumentName=localStorage.getItem('smc_instrument')||'XAUUSD';
 const SB_KEY='smc_starting_balance_v1';
@@ -1308,6 +1310,8 @@ function autoCollapseOnMobile(){
 
 /* HELPERS */
 function setRR(val,updChip=true){document.getElementById('rrTarget').value=val;if(updChip)document.querySelectorAll('.rrc').forEach(b=>b.classList.toggle('active',parseFloat(b.textContent)===val));calcSLTP();}
+function setTradeQuality(val){state.tradeQuality=val;const wrap=document.getElementById('tradeQualityBtns');if(wrap)wrap.querySelectorAll('.rrc').forEach(b=>b.classList.toggle('active',parseInt(b.textContent)===val));}
+function setResultQuality(val){state.resultQuality=val;const wrap=document.getElementById('resultQualityBtns');if(wrap)wrap.querySelectorAll('.rrc').forEach(b=>b.classList.toggle('active',parseInt(b.textContent)===val));}
 function setDur(h,m){document.getElementById('tradeHours').value=h||'';document.getElementById('tradeMinutes').value=m||'';}
 function getDurStr(){const h=parseInt(document.getElementById('tradeHours').value)||0;const m=parseInt(document.getElementById('tradeMinutes').value)||0;if(!h&&!m)return'';return(h?h+'h ':'')+( m?m+'m':'');}
 
@@ -1366,7 +1370,7 @@ function addTrade(){
     if(pnlInput===''){alert('กรุณาใส่ PnL ($)');return;}
     const pnl=parseFloat(pnlInput)||0;
     const rp=parseFloat(document.getElementById('qaRiskPct').value)||null;
-    const trade={id:Date.now(),no:state.trades.length+1,date,time,session,entry:'—',sl:'—',tp:'—',rr:'—',fibo:'',mtf:getMTF(),tags:[...state.activeTags],outcome:state.outcome,pnl,lot:'—',leverage:currentLeverage,riskPct:rp?rp.toFixed(1):'—',riskAmt:'',balance:'',dir:state.direction,expName:state.lab.name||'Unnamed',expTF:[...state.lab.tf],duration:'',hypothesis:state.lab.hypothesis,note,exitPrice:null,realRR:null,mae:null,mfe:null,img:null,needsDetail:true,checkPct:0};
+    const trade={id:Date.now(),no:state.trades.length+1,date,time,session,entry:'—',sl:'—',tp:'—',rr:'—',fibo:'',mtf:getMTF(),tags:[...state.activeTags],outcome:state.outcome,pnl,lot:'—',leverage:currentLeverage,riskPct:rp?rp.toFixed(1):'—',riskAmt:'',balance:'',dir:state.direction,expName:state.lab.name||'Unnamed',expTF:[...state.lab.tf],duration:'',hypothesis:state.lab.hypothesis,note,exitPrice:null,realRR:null,mae:null,mfe:null,img:null,needsDetail:true,checkPct:0,tradeQuality:state.tradeQuality,resultQuality:state.resultQuality};
     state.trades.push(trade);saveToStorage();
     renderAll();
     showToast('ok',`Quick Add #${trade.no} — ${trade.outcome} ${trade.pnl>=0?'+':''}$${Math.abs(trade.pnl).toFixed(2)} (ต้องเติม detail)`);
@@ -1393,7 +1397,7 @@ function addTrade(){
   let realRR=null;
   if(exitP&&entry&&sl){const diff=state.direction==='BUY'?exitP-entry:entry-exitP;realRR=parseFloat((diff/sl).toFixed(2));}
   const pnl=lot>0?(state.outcome==='WIN'?lot*100*(realRR?sl*realRR:tp):state.outcome==='LOSS'?-(lot*100*sl):0):(state.outcome==='WIN'?(realRR?sl*realRR:tp):state.outcome==='LOSS'?-sl:0);
-  const trade={id:Date.now(),no:state.trades.length+1,date,time,session,entry:entry.toFixed(2),sl:sl.toFixed(2),tp:tp.toFixed(2),rr:`1:${rr.toFixed(1)}`,fibo,mtf:getMTF(),tags:[...state.activeTags],outcome:state.outcome,pnl,lot:lot.toFixed(2),leverage:currentLeverage,riskPct:rp.toFixed(1),riskAmt:riskAmt.toFixed(2),balance:bal.toFixed(0),dir:state.direction,expName:state.lab.name||'Unnamed',expTF:[...state.lab.tf],duration:getDurStr(),hypothesis:state.lab.hypothesis,note,exitPrice:exitP,realRR,mae,mfe,img:currentImgData||null,checkPct};
+  const trade={id:Date.now(),no:state.trades.length+1,date,time,session,entry:entry.toFixed(2),sl:sl.toFixed(2),tp:tp.toFixed(2),rr:`1:${rr.toFixed(1)}`,fibo,mtf:getMTF(),tags:[...state.activeTags],outcome:state.outcome,pnl,lot:lot.toFixed(2),leverage:currentLeverage,riskPct:rp.toFixed(1),riskAmt:riskAmt.toFixed(2),balance:bal.toFixed(0),dir:state.direction,expName:state.lab.name||'Unnamed',expTF:[...state.lab.tf],duration:getDurStr(),hypothesis:state.lab.hypothesis,note,exitPrice:exitP,realRR,mae,mfe,img:currentImgData||null,checkPct,tradeQuality:state.tradeQuality,resultQuality:state.resultQuality};
   state.trades.push(trade);saveToStorage();
   const isLucky=trade.outcome==='WIN'&&trade.checkPct<50;
   renderAll();
@@ -1404,12 +1408,13 @@ function addTrade(){
 
 /* CLEAR FORM */
 function clearForm(){
-  state.outcome=null;state.activeTags=[];
+  state.outcome=null;state.activeTags=[];state.tradeQuality=null;state.resultQuality=null;
   ['Win','Loss','BE'].forEach(x=>document.getElementById('btn'+x).classList.remove('active'));
   document.getElementById('tradeNote').value='';document.getElementById('tradeHours').value='';document.getElementById('tradeMinutes').value='';
   document.getElementById('actualExitPrice').value='';document.getElementById('tradeMae').value='';document.getElementById('tradeMfe').value='';
   document.getElementById('qaPnl').value='';document.getElementById('qaRiskPct').value='';
   document.getElementById('realizedRRBox').style.display='none';
+  document.querySelectorAll('#tradeQualityBtns .rrc, #resultQualityBtns .rrc').forEach(b=>b.classList.remove('active'));
   removeImg();
   document.getElementById('rrTarget').value=state.lab.rr;
   document.getElementById('riskPct').value=state.lab.riskPct||1;
@@ -1612,6 +1617,7 @@ function renderLogCards(){
     const timeStr=t.time?` ${t.time}`:'';
     const realRRBadge=t.realRR!=null?`<span style="font-size:9px;color:${t.realRR>0?'var(--green)':'var(--red)'};margin-left:4px;">Actual RR 1:${t.realRR}</span>`:'';
     const maemfe=(t.mae!=null||t.mfe!=null)?`<div style="font-size:9px;color:var(--text-2);margin-top:4px;">MAE: <span style="color:var(--red);">${t.mae!=null?'$'+t.mae:'—'}</span> · MFE: <span style="color:var(--green);">${t.mfe!=null?'$'+t.mfe:'—'}</span></div>`:'';
+    const qualityHtml=(t.tradeQuality!=null||t.resultQuality!=null)?`<div style="font-size:9px;color:var(--text-2);margin-top:4px;">${t.tradeQuality!=null?`⭐ Process: <span style="color:var(--gold);">${t.tradeQuality}/5</span>`:''}${(t.tradeQuality!=null&&t.resultQuality!=null)?' · ':''}${t.resultQuality!=null?`🎯 Result: <span style="color:var(--gold);">${t.resultQuality}/5</span>`:''}</div>`:'';
     const imgHtml=t.img?`<div style="margin-top:8px;"><img src="${t.img}" style="width:100%;max-height:140px;object-fit:cover;border-radius:6px;border:1px solid var(--border);cursor:pointer;" onclick="showImgFull('${t.id}')" title="คลิกดูรูปเต็ม"/></div>`:'';
     return`<div class="tcard ${oc}">
       <button class="tcdel" onclick="deleteTrade(${t.id})" title="ลบ">✕</button>
@@ -1636,6 +1642,7 @@ function renderLogCards(){
         <div class="tcc"><div class="tcck">MTF</div><div class="tccv" style="color:var(--text-2);font-size:10px">${t.mtf}</div></div>
       </div>
       ${maemfe}
+      ${qualityHtml}
       <div class="tcbot"><div class="tctags">${(t.tags||[]).map(tg=>`<span class="tctag">${tg}</span>`).join('')}</div><span style="font-size:9px;color:var(--text-2);">${(t.fibo||'').split('—')[0].trim()}</span></div>
       ${t.note?`<div class="tcnote">💬 ${t.note}</div>`:''}
       ${t.duration?`<div style="font-size:9px;color:var(--text-2);margin-top:5px;">⏱ ${t.duration}</div>`:''}
@@ -1714,6 +1721,8 @@ function openEditTrade(id){
   document.getElementById('etRiskPct').value=parseFloat(t.riskPct)||1;
   document.getElementById('etMae').value=t.mae||'';
   document.getElementById('etMfe').value=t.mfe||'';
+  document.getElementById('etTradeQuality').value=t.tradeQuality!=null?t.tradeQuality:'';
+  document.getElementById('etResultQuality').value=t.resultQuality!=null?t.resultQuality:'';
   document.getElementById('etNote').value=t.note||'';
   const fs=document.getElementById('etFibo');for(let o of fs.options)o.selected=o.value===t.fibo;
   _etOutcome=t.outcome;
@@ -1748,6 +1757,8 @@ function saveEditTrade(){
   t.riskPct=parseFloat(document.getElementById('etRiskPct').value).toFixed(1);
   t.mae=parseFloat(document.getElementById('etMae').value)||null;
   t.mfe=parseFloat(document.getElementById('etMfe').value)||null;
+  t.tradeQuality=parseInt(document.getElementById('etTradeQuality').value)||null;
+  t.resultQuality=parseInt(document.getElementById('etResultQuality').value)||null;
   t.note=document.getElementById('etNote').value;t.fibo=document.getElementById('etFibo').value;
   t.outcome=_etOutcome;t.pnl=pnl;
   delete t.needsDetail;
@@ -2118,6 +2129,22 @@ function openEditNote(id){const t=state.trades.find(x=>x.id===id);if(!t)return;d
 function saveEditNote(){const id=parseInt(document.getElementById('editNoteTradeId').value);const note=document.getElementById('editNoteText').value.trim();const h=parseInt(document.getElementById('editHours').value)||0;const m=parseInt(document.getElementById('editMinutes').value)||0;const dur=((h?h+'h ':'')+( m?m+'m':'')).trim();const t=state.trades.find(x=>x.id===id);if(!t)return;t.note=note;t.duration=dur;saveToStorage();hideMdl('editNoteModal');renderLog();showToast('ok','บันทึก Note');}
 function showCopyMdl(text){document.getElementById('copyModalText').value=text;document.getElementById('copyModal').classList.add('show');setTimeout(()=>document.getElementById('copyModalText').select(),100);}
 ['clearModal','deleteExpModal','deleteTradeModal','instrumentModal','startBalModal','editNoteModal','editTradeModal','copyModal'].forEach(id=>{document.getElementById(id).addEventListener('click',function(e){if(e.target===this)hideMdl(id);});});
+
+/* HAMBURGER MENU */
+function toggleHamburger(){
+  const menu=document.getElementById('hamburgerMenu');
+  if(!menu)return;
+  const isOpen=menu.style.display==='block';
+  menu.style.display=isOpen?'none':'block';
+}
+document.addEventListener('click',function(e){
+  const wrap=document.getElementById('hamburgerWrap');
+  const menu=document.getElementById('hamburgerMenu');
+  if(!wrap||!menu)return;
+  if(menu.style.display==='block'&&!wrap.contains(e.target)){
+    menu.style.display='none';
+  }
+});
 
 /* CALENDAR */
 let calState={year:new Date().getFullYear(),month:new Date().getMonth(),open:true};
