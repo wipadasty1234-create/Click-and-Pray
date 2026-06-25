@@ -83,6 +83,64 @@ body{background:var(--bg-0);color:var(--text-0);font-family:-apple-system,BlinkM
 .ltxt::placeholder{color:var(--text-2);}
 .lhint{font-size:9px;color:#6b5aa0;line-height:1.5;}
 
+/* QUICK ADD TOGGLE */
+.qaswitch{display:flex;align-items:center;justify-content:space-between;background:var(--bg-3);border:1px solid var(--border);border-radius:8px;padding:8px 10px;margin-bottom:10px;}
+.qaswitch-lbl{display:flex;flex-direction:column;gap:1px;}
+.qaswitch-lbl b{font-size:11px;color:var(--text-0);font-weight:700;}
+.qaswitch-lbl span{font-size:9px;color:var(--text-2);}
+.qatoggle{position:relative;width:38px;height:20px;border-radius:10px;background:var(--bg-4);border:1px solid var(--border);cursor:pointer;flex-shrink:0;transition:all .2s;}
+.qatoggle::after{content:'';position:absolute;top:2px;left:2px;width:14px;height:14px;border-radius:50%;background:var(--text-2);transition:all .2s;}
+.qatoggle.on{background:#3d2d6e;border-color:var(--lab);}
+.qatoggle.on::after{left:20px;background:var(--lab);}
+.qa-fields{display:none;}
+.qa-fields.show{display:block;}
+.detail-fields.qa-hidden{display:none;}
+.qa-pnl-row{display:flex;flex-direction:column;gap:5px;margin-top:8px;}
+.needs-detail-badge{display:inline-block;padding:2px 7px;border-radius:4px;font-size:8px;font-weight:700;letter-spacing:.05em;background:#2a1f0d;color:var(--gold);border:1px solid var(--gold-dim);margin-left:4px;}
+
+/* PENDING / DRAFT TRADES */
+.pendwrap{display:flex;flex-direction:column;gap:8px;}
+.pendc{background:var(--bg-2);border:1px solid var(--gold-dim);border-left:3px solid var(--gold);border-radius:10px;padding:12px 14px;position:relative;}
+.pendtop{display:flex;align-items:center;justify-content:space-between;margin-bottom:8px;flex-wrap:wrap;gap:6px;}
+.pendtl{display:flex;align-items:center;gap:6px;flex-wrap:wrap;}
+.pendbadge{font-size:9px;font-weight:700;letter-spacing:.06em;padding:2px 8px;border-radius:4px;background:#2a1f0d;color:var(--gold);border:1px solid var(--gold-dim);}
+.pendgrid{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-bottom:8px;}
+.pendnote{font-size:10px;color:var(--text-2);font-style:italic;margin-bottom:8px;line-height:1.5;}
+.pendact{display:flex;gap:6px;justify-content:flex-end;}
+.pendbtn{padding:5px 11px;border-radius:6px;border:1px solid var(--border);background:transparent;font-size:10px;font-weight:600;cursor:pointer;font-family:inherit;transition:all .15s;}
+.pendbtn.fill{border-color:var(--green-dim);color:var(--green);}
+.pendbtn.fill:hover{background:#081a12;border-color:var(--green);}
+.pendbtn.del{border-color:var(--red-dim);color:var(--red-dim);}
+.pendbtn.del:hover{background:#1a0808;color:var(--red);border-color:var(--red);}
+.pendempty{text-align:center;padding:24px;color:var(--text-2);font-size:12px;}
+.savedraftbtn{width:100%;padding:9px;margin-top:6px;border-radius:8px;border:1px dashed var(--gold-dim);background:transparent;color:var(--gold);font-weight:700;font-size:11px;cursor:pointer;font-family:inherit;transition:all .2s;}
+.savedraftbtn:hover{background:#1a1208;border-style:solid;}
+.pendcountbadge{display:inline-flex;align-items:center;justify-content:center;min-width:18px;height:18px;padding:0 5px;border-radius:9px;background:var(--gold);color:#000;font-size:10px;font-weight:700;margin-left:6px;}
+
+/* SESSION ANALYSIS */
+.sessg{display:grid;grid-template-columns:repeat(auto-fill,minmax(140px,1fr));gap:8px;}
+.sessc{background:var(--bg-2);border:1px solid var(--border);border-radius:8px;padding:10px 12px;border-top:2px solid var(--blue);}
+.sessc.best{border-top-color:var(--green);}
+.sessc.worst{border-top-color:var(--red);}
+.sessn{font-size:11px;font-weight:700;color:var(--text-0);margin-bottom:7px;display:flex;align-items:center;justify-content:space-between;}
+.sesscrown{font-size:10px;}
+.sesss{display:flex;gap:6px;}
+.sessi{flex:1;text-align:center;}
+.sessi .k{font-size:8px;color:var(--text-2);text-transform:uppercase;letter-spacing:.05em;}
+.sessi .v{font-size:13px;font-weight:700;font-family:monospace;margin-top:2px;}
+
+/* MOBILE STICKY QUICKNAV */
+.mqnav{display:none;}
+@media(max-width:900px){
+  .mqnav{
+    display:flex;position:sticky;top:0;z-index:90;background:var(--bg-1);
+    border-bottom:1px solid var(--border);padding:8px 10px;gap:6px;overflow-x:auto;
+  }
+  .mqnav a{flex-shrink:0;padding:6px 12px;border-radius:6px;border:1px solid var(--border);background:var(--bg-3);color:var(--text-1);font-size:10px;font-weight:600;text-decoration:none;white-space:nowrap;}
+  .mqnav a:active{border-color:var(--gold);color:var(--gold);}
+}
+.sidebar-drawer-toggle{align-items:center;justify-content:center;gap:6px;width:100%;padding:10px;background:var(--bg-2);border:none;border-bottom:1px solid var(--border);color:var(--gold);font-size:11px;font-weight:700;cursor:pointer;font-family:inherit;letter-spacing:.04em;}
+
 /* TRADE SETUP */
 .dbtn{display:grid;grid-template-columns:1fr 1fr;gap:8px;}
 .dbtn button{padding:10px;border:1px solid var(--border);border-radius:8px;cursor:pointer;font-weight:700;font-size:12px;text-align:center;transition:all .2s;font-family:inherit;background:var(--bg-3);color:var(--text-1);}
@@ -368,19 +426,25 @@ body{background:var(--bg-0);color:var(--text-0);font-family:-apple-system,BlinkM
 
 @media(max-width:900px){
   .layout{grid-template-columns:1fr;min-height:unset;}
-  .sidebar{height:auto;position:static;max-height:none;border-right:none;border-bottom:1px solid var(--border);}
+  .sidebar{height:auto;max-height:60vh;position:static;border-right:none;border-bottom:1px solid var(--border);transition:max-height .3s ease;}
+  .sidebar.collapsed{max-height:0;overflow:hidden;border-bottom:none;}
   .main{padding:12px;}
   .hdr{flex-wrap:wrap;gap:8px;}
   .wfg{grid-template-columns:repeat(2,1fr);}
   .tcgrid{grid-template-columns:repeat(2,1fr);}
   .lr3{grid-template-columns:1fr 1fr;}
+  .pendgrid{grid-template-columns:repeat(2,1fr);}
+  .sessg{grid-template-columns:repeat(2,1fr);}
+  .sidebar-drawer-toggle{display:flex;}
 }
+.sidebar-drawer-toggle{display:none;}
 </style>
 </head>
 <body>
 
 <!-- HEADER -->
 <div class="hdr">
+
   <div class="hdr-left">
     <div class="logo">🧪</div>
     <div>
@@ -417,6 +481,11 @@ body{background:var(--bg-0);color:var(--text-0);font-family:-apple-system,BlinkM
   <div class="si"><div class="sl">Total Trades</div><div class="sv neu" id="statTrades">0</div><div class="ss" id="statWLD">0W / 0L / 0BE</div></div>
   <div class="si"><div class="sl">Win Rate</div><div class="sv gld" id="statWR">—</div></div>
   <div class="si"><div class="sl">Total PnL ($)</div><div class="sv pos" id="statPnL">+$0.00</div><div class="ss" id="statPnLSub">actual lot</div></div>
+  <div class="si" style="cursor:pointer;" onclick="editStartBalance()" title="คลิกเพื่อตั้ง Starting Balance">
+    <div class="sl">% Growth <span style="opacity:.6;">✎</span></div>
+    <div class="sv pos" id="statGrowthPct">—</div>
+    <div class="ss" id="statGrowthSub">set starting balance</div>
+  </div>
   <div class="si"><div class="sl">Exp. Value</div><div class="sv gld" id="statEV">—</div><div class="ss">per trade</div></div>
   <div class="si"><div class="sl">Max Win Streak</div><div class="sv neu" id="statStreak">0</div><div class="ss" id="statMaxLoss">Max Loss: 0</div></div>
   <div class="si"><div class="sl">Current Streak</div><div class="sv neu" id="statCurrentStreak">—</div><div class="ss" id="statCurrentStreakSub">no trades</div></div>
@@ -424,9 +493,30 @@ body{background:var(--bg-0);color:var(--text-0);font-family:-apple-system,BlinkM
   <div class="si"><div class="sl">Profit Factor</div><div class="sv gld" id="statPF">—</div></div>
 </div>
 
+<!-- MOBILE QUICK NAV — jump between form and log without long scrolling -->
+<div class="mqnav">
+  <a href="#sidebarEl" onclick="expandSidebarIfCollapsed()">✏️ ฟอร์ม</a>
+  <a href="#pendingPanel">📝 Pending</a>
+  <a href="#mainLogAnchor">📋 Log</a>
+  <a href="#sessionAnchor">🕐 Session</a>
+  <a href="#weeklyAnchor">📅 Calendar</a>
+</div>
+
 <!-- LAYOUT -->
 <div class="layout">
-<div class="sidebar">
+<button class="sidebar-drawer-toggle" id="drawerToggleBtn" onclick="toggleSidebarDrawer()">✏️ แสดง/ซ่อนฟอร์ม Trade Setup <span id="drawerToggleIcon">▾</span></button>
+<div class="sidebar" id="sidebarEl">
+
+  <!-- QUICK ADD TOGGLE -->
+  <div class="sec" style="padding-bottom:10px;">
+    <div class="qaswitch" onclick="toggleQuickAdd()">
+      <div class="qaswitch-lbl">
+        <b>⚡ Quick Add Mode</b>
+        <span>กรอกแค่ Direction / Outcome / PnL — เติม detail ทีหลังได้</span>
+      </div>
+      <div class="qatoggle" id="qaToggleEl"></div>
+    </div>
+  </div>
 
   <!-- PORTFOLIO CONFIG -->
   <div class="sec" style="background:linear-gradient(180deg,#0f0b1a 0%,transparent 100%);">
@@ -490,14 +580,14 @@ body{background:var(--bg-0);color:var(--text-0);font-family:-apple-system,BlinkM
   </div>
 
   <!-- MTF BIAS -->
-  <div class="sec">
+  <div class="sec detail-fields" id="mtfSec">
     <div class="stitle">MTF Bias</div>
     <div class="tfg" id="tfGrid"></div>
     <div style="font-size:9px;color:var(--text-2);margin-top:8px;">คลิกเพื่อสลับ Bullish / Bearish / Neutral</div>
   </div>
 
   <!-- TRADE SETUP -->
-  <div class="sec">
+  <div class="sec" id="tradeSetupSec">
     <div class="stitle">Trade Setup</div>
     <div class="dbtn">
       <button class="buy active" id="btnBuy" onclick="setDir('BUY')">▲ BUY</button>
@@ -512,8 +602,14 @@ body{background:var(--bg-0);color:var(--text-0);font-family:-apple-system,BlinkM
         <select class="fsel" id="tradeSession">
           <option>London</option><option>New York</option><option>Asian</option><option>London/NY Overlap</option>
         </select></div>
-      <div class="fg"><label class="flbl">Actual Exit Price ($)</label><input type="number" class="finp" id="actualExitPrice" placeholder="ถ้า close ก่อน TP" step="0.01" oninput="calcRealizedRR()"/></div>
+      <div class="fg detail-fields"><label class="flbl">Actual Exit Price ($)</label><input type="number" class="finp" id="actualExitPrice" placeholder="ถ้า close ก่อน TP" step="0.01" oninput="calcRealizedRR()"/></div>
     </div>
+    <!-- QUICK ADD: PnL direct input -->
+    <div class="fr qa-fields" id="qaPnlRow">
+      <div class="fg"><label class="flbl">PnL จริง ($) <span style="color:var(--gold);">*</span></label><input type="number" class="finp" id="qaPnl" placeholder="เช่น 45.50 หรือ -20" step="0.01"/></div>
+      <div class="fg"><label class="flbl">Risk % (optional)</label><input type="number" class="finp" id="qaRiskPct" placeholder="1" step="0.1" min="0.1" max="20"/></div>
+    </div>
+    <div class="detail-fields">
     <div class="fr">
       <div class="fg"><label class="flbl">Entry Price ($)</label><input type="number" class="finp" id="entryPrice" value="3300.00" step="0.01" oninput="calcSLTP()"/></div>
       <div class="fg"><label class="flbl">SL Distance ($)</label><input type="number" class="finp" id="slDist" value="5" step="0.5" min="0.1" oninput="calcSLTP()"/></div>
@@ -599,10 +695,11 @@ body{background:var(--bg-0);color:var(--text-0);font-family:-apple-system,BlinkM
         </div>
       </div>
     </div>
+    </div><!-- /detail-fields -->
   </div>
 
   <!-- TAGS -->
-  <div class="sec">
+  <div class="sec detail-fields">
     <div class="stitle">Strategy Tags</div>
     <div style="font-size:9px;color:var(--text-2);margin-bottom:6px;text-transform:uppercase;letter-spacing:.1em;">SMC Confluence</div>
     <div class="tgg" id="smcTagGrid"></div>
@@ -622,6 +719,7 @@ body{background:var(--bg-0);color:var(--text-0);font-family:-apple-system,BlinkM
   <!-- NOTE & OUTCOME -->
   <div class="sec">
     <div class="stitle">Note & Outcome</div>
+    <div class="detail-fields">
     <div class="fg" style="margin-bottom:6px;">
       <label class="flbl">⏱ Duration</label>
       <div style="display:flex;gap:6px;align-items:center;">
@@ -648,9 +746,10 @@ body{background:var(--bg-0);color:var(--text-0);font-family:-apple-system,BlinkM
       📐 Realized RR: <strong id="realizedRRVal" style="color:var(--gold);font-family:monospace;"></strong>
       <span style="color:var(--text-2);font-size:9px;margin-left:6px;">(vs planned <span id="plannedRRVal"></span>)</span>
     </div>
+    </div><!-- /detail-fields -->
     <textarea class="ntarea" id="tradeNote" placeholder="เหตุผล setup, สภาพตลาด, ข้อสังเกต..."></textarea>
     <!-- Image Attachment -->
-    <div style="margin-top:8px;">
+    <div class="detail-fields" style="margin-top:8px;">
       <label class="flbl">📸 Chart Screenshot <span style="color:var(--text-2);font-size:8px;">(บันทึกเต็มคุณภาพ)</span></label>
       <div class="img-attach-area" id="imgDropArea" onclick="document.getElementById('chartImgInput').click()">
         <input type="file" id="chartImgInput" accept="image/*" style="display:none" onchange="handleImgSelect(event)"/>
@@ -667,11 +766,12 @@ body{background:var(--bg-0);color:var(--text-0);font-family:-apple-system,BlinkM
       <button class="outbtn be" id="btnBE" onclick="setOutcome('BE')">○ B/E</button>
     </div>
     <button class="addbtn" onclick="addTrade()">+ ADD TRADE</button>
+    <button class="savedraftbtn detail-fields" onclick="savePendingTrade()">📝 Save as Pending Plan (ยังไม่ entry)</button>
     <button class="clrbtn" onclick="clearForm()">↺ Clear Form</button>
   </div>
 
   <!-- CHECKLIST -->
-  <div class="sec">
+  <div class="sec detail-fields">
     <div class="stitle">Entry Checklist</div>
     <div class="slbl"><span>Score</span><span id="checkScore" style="color:var(--gold);font-weight:700;">—</span></div>
     <div class="sbar"><div class="sbarfill" id="scoreBar" style="width:0%"></div></div>
@@ -682,6 +782,17 @@ body{background:var(--bg-0);color:var(--text-0);font-family:-apple-system,BlinkM
 
 <!-- MAIN -->
 <div class="main">
+
+  <!-- PENDING TRADES (PRE-TRADE PLANNING) -->
+  <div class="panel" id="pendingPanel">
+    <div class="phdr" style="cursor:pointer;" onclick="togglePending()">
+      <span class="ptitle">📝 Pending Trades — Pre-Trade Plans<span id="pendCountBadgeWrap"></span></span>
+      <span id="pendToggleIcon" style="font-size:12px;color:var(--text-2);">▾</span>
+    </div>
+    <div id="pendingBody" class="pbody">
+      <div id="pendingWrap" class="pendwrap"><div class="pendempty">ยังไม่มี pending trade — กด "Save as Pending Plan" ในฟอร์มเพื่อบันทึก setup ที่วางแผนไว้ก่อน entry</div></div>
+    </div>
+  </div>
 
   <div class="panel">
     <div class="phdr">
@@ -724,7 +835,7 @@ body{background:var(--bg-0);color:var(--text-0);font-family:-apple-system,BlinkM
   </div>
 
   <!-- CALENDAR VIEW -->
-  <div class="panel">
+  <div class="panel" id="weeklyAnchor">
     <div class="phdr" style="cursor:pointer;" onclick="toggleCal()">
       <span class="ptitle">📅 Calendar View</span>
       <span id="calToggleIcon" style="font-size:12px;color:var(--text-2);">▾</span>
@@ -757,7 +868,7 @@ body{background:var(--bg-0);color:var(--text-0);font-family:-apple-system,BlinkM
     </div>
   </div>
 
-  <div class="panel">
+  <div class="panel" id="mainLogAnchor">
     <div class="phdr">
       <span class="ptitle">Trade Log</span>
       <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap;">
@@ -790,6 +901,11 @@ body{background:var(--bg-0);color:var(--text-0);font-family:-apple-system,BlinkM
     <div class="pbody"><div class="tpg" id="tagPerfGrid"><div style="color:var(--text-2);font-size:12px;">ยังไม่มีข้อมูล</div></div></div>
   </div>
 
+  <div class="panel" id="sessionAnchor">
+    <div class="phdr"><span class="ptitle">🕐 Session Analysis</span><span style="font-size:9px;color:var(--text-2);">London / NY / Asian — WR ไหนดีที่สุด</span></div>
+    <div class="pbody"><div class="sessg" id="sessionGrid"><div style="color:var(--text-2);font-size:12px;">ยังไม่มีข้อมูล</div></div></div>
+  </div>
+
   <div class="panel">
     <div class="phdr" style="cursor:pointer;" onclick="toggleTP()">
       <span class="ptitle">🔗 Tag Pair Analysis</span>
@@ -816,6 +932,7 @@ body{background:var(--bg-0);color:var(--text-0);font-family:-apple-system,BlinkM
 <div class="mbk" id="deleteTradeModal"><div class="mdl"><div class="mdlico">🗑</div><div class="mdltitle">ลบ trade นี้?</div><div class="mdldesc" id="deleteTradeDesc">การลบไม่สามารถย้อนกลับได้</div><div class="mdlact"><button class="mcancel" onclick="hideMdl('deleteTradeModal')">ยกเลิก</button><button class="mconfirm" onclick="confirmDeleteTrade()" style="background:var(--red);">🗑 ลบ</button></div></div></div>
 <div class="mbk" id="deleteExpModal"><div class="mdl"><div class="mdlico">🧪</div><div class="mdltitle" id="deleteExpTitle">ลบ Experiment?</div><div class="mdldesc" id="deleteExpDesc">Trades ยังอยู่ในระบบ</div><div class="mdlact"><button class="mcancel" onclick="hideMdl('deleteExpModal')">ยกเลิก</button><button class="mconfirm" onclick="confirmDeleteExp()" style="background:var(--red);">🗑 ลบ</button></div></div></div>
 <div class="mbk" id="instrumentModal"><div class="mdl"><div class="mdlico">📈</div><div class="mdltitle">ตั้งชื่อ Instrument</div><div class="mdldesc">เช่น XAUUSD, EURUSD, BTC/USD, NQ</div><input type="text" id="instrumentInput" maxlength="20" style="width:100%;background:#0a0c0f;border:1px solid #2a3240;border-radius:8px;padding:10px 12px;color:#e8edf5;font-size:14px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;outline:none;margin-bottom:16px;" placeholder="XAUUSD" onkeydown="if(event.key==='Enter')saveInstrument()"/><div class="mdlact"><button class="mcancel" onclick="hideMdl('instrumentModal')">ยกเลิก</button><button class="mconfirm" style="background:var(--gold);color:#000;" onclick="saveInstrument()">✓ ตั้งค่า</button></div></div></div>
+<div class="mbk" id="startBalModal"><div class="mdl"><div class="mdlico">💰</div><div class="mdltitle">Starting Balance</div><div class="mdldesc">ยอดเงินตั้งต้นของพอร์ต — ใช้คำนวณ % Growth จาก PnL สะสม</div><input type="number" id="startBalInput" min="1" step="100" style="width:100%;background:#0a0c0f;border:1px solid #2a3240;border-radius:8px;padding:10px 12px;color:#e8edf5;font-size:14px;font-weight:700;font-family:'Consolas','Courier New',monospace;outline:none;margin-bottom:16px;" placeholder="10000" onkeydown="if(event.key==='Enter')saveStartBalance()"/><div class="mdlact"><button class="mcancel" onclick="hideMdl('startBalModal')">ยกเลิก</button><button class="mconfirm" style="background:var(--gold);color:#000;" onclick="saveStartBalance()">✓ บันทึก</button></div></div></div>
 <div class="mbk" id="editNoteModal"><div class="mdl" style="max-width:480px;"><div class="mdlico">✏️</div><div class="mdltitle">แก้ไข Note & Duration</div><input type="hidden" id="editNoteTradeId"/><div style="margin-bottom:8px;"><label style="font-size:9px;color:var(--text-2);text-transform:uppercase;letter-spacing:.1em;">⏱ Duration</label><div style="display:flex;gap:6px;margin-top:4px;"><input type="number" id="editHours" placeholder="h" min="0" style="width:70px;background:#0a0c0f;border:1px solid #2a3240;border-radius:6px;padding:7px 9px;color:#e8edf5;font-size:12px;outline:none;"/><span style="color:var(--text-2);align-self:center;">h</span><input type="number" id="editMinutes" placeholder="m" min="0" max="59" style="width:70px;background:#0a0c0f;border:1px solid #2a3240;border-radius:6px;padding:7px 9px;color:#e8edf5;font-size:12px;outline:none;"/><span style="color:var(--text-2);align-self:center;">m</span></div></div><label style="font-size:9px;color:var(--text-2);text-transform:uppercase;letter-spacing:.1em;">Note</label><textarea id="editNoteText" style="width:100%;height:120px;margin-top:4px;background:#0a0c0f;border:1px solid #2a3240;border-radius:8px;padding:10px;color:#e8edf5;font-size:12px;resize:vertical;outline:none;margin-bottom:16px;font-family:inherit;" placeholder="เพิ่มหรือแก้ไข note..."></textarea><div class="mdlact"><button class="mcancel" onclick="hideMdl('editNoteModal')">ยกเลิก</button><button class="mconfirm" style="background:var(--gold);color:#000;" onclick="saveEditNote()">💾 บันทึก</button></div></div></div>
 
 <!-- FULL EDIT TRADE MODAL -->
@@ -823,6 +940,7 @@ body{background:var(--bg-0);color:var(--text-0);font-family:-apple-system,BlinkM
   <div class="mdl" style="max-width:560px;max-height:90vh;overflow-y:auto;">
     <div class="mdlico">✏️</div>
     <div class="mdltitle">แก้ไข Trade <span id="editTradeNo" style="color:var(--gold);font-family:monospace;"></span></div>
+    <div id="etNeedsDetailHint" style="display:none;background:#1a1208;border:1px solid var(--gold-dim);border-radius:6px;padding:7px 10px;font-size:10px;color:var(--gold);margin-bottom:10px;">⚡ Quick Add trade — PnL ที่กรอกไว้ (<span id="etNeedsDetailPnl"></span>) จะไม่ถูกคำนวณซ้ำ เติม Entry/SL/Tags ได้ตามสบาย</div>
     <input type="hidden" id="editTradeId"/>
     <div class="editfull-grid">
       <div class="ef-grp"><label class="ef-lbl">Date</label><input type="date" class="ef-inp" id="etDate"/></div>
@@ -883,6 +1001,8 @@ const LAB_WF=[
 let state={direction:'BUY',outcome:null,activeTags:[],trades:[],tfBias:{0:'bull',1:'bull',2:'bull'},logFilter:'ALL',logView:'card',lab:{name:'',tf:['D1','H4','H1'],rr:3,riskPct:1,hypothesis:''}};
 let currentLeverage=100;
 let instrumentName=localStorage.getItem('smc_instrument')||'XAUUSD';
+const SB_KEY='smc_starting_balance_v1';
+let startingBalance=parseFloat(localStorage.getItem(SB_KEY))||null;
 let _pendingDelExp=null;
 
 window.onload=()=>{
@@ -898,6 +1018,8 @@ window.onload=()=>{
   calState.year=now.getFullYear(); calState.month=now.getMonth();
   renderCalendar(); renderWeeklyReflections();
   setDashTab('wr');
+  renderStats(); renderSessionAnalysis(); loadPendingTrades(); renderPending();
+  setQuickAdd(loadQuickAddPref());
 };
 
 /* LAB CONFIG */
@@ -1053,6 +1175,38 @@ function addCustomTag(){const inp=document.getElementById('newTagInput');const v
 function setDir(d){state.direction=d;document.getElementById('btnBuy').classList.toggle('active',d==='BUY');document.getElementById('btnSell').classList.toggle('active',d==='SELL');calcSLTP();}
 function setOutcome(o){state.outcome=o;['Win','Loss','BE'].forEach(x=>document.getElementById('btn'+x).classList.toggle('active',x.toUpperCase()===o));updateChecklist();}
 
+/* QUICK ADD MODE */
+const QA_KEY='smc_quickadd_pref_v1';
+let quickAddMode=false;
+function loadQuickAddPref(){return localStorage.getItem(QA_KEY)==='1';}
+function toggleQuickAdd(){setQuickAdd(!quickAddMode);}
+function setQuickAdd(on){
+  quickAddMode=on;
+  localStorage.setItem(QA_KEY,on?'1':'0');
+  document.getElementById('qaToggleEl').classList.toggle('on',on);
+  document.querySelectorAll('.detail-fields').forEach(el=>el.style.display=on?'none':'');
+  document.querySelectorAll('.qa-fields').forEach(el=>el.classList.toggle('show',on));
+}
+
+/* MOBILE SIDEBAR DRAWER */
+function toggleSidebarDrawer(){
+  const sb=document.getElementById('sidebarEl');
+  const collapsed=sb.classList.toggle('collapsed');
+  document.getElementById('drawerToggleIcon').textContent=collapsed?'▸':'▾';
+}
+function expandSidebarIfCollapsed(){
+  const sb=document.getElementById('sidebarEl');
+  if(sb.classList.contains('collapsed')){sb.classList.remove('collapsed');document.getElementById('drawerToggleIcon').textContent='▾';}
+}
+function autoCollapseOnMobile(){
+  if(window.innerWidth>900)return; // desktop: sidebar always visible, nothing to collapse
+  const sb=document.getElementById('sidebarEl');
+  sb.classList.add('collapsed');
+  const icon=document.getElementById('drawerToggleIcon');if(icon)icon.textContent='▸';
+  const log=document.getElementById('mainLogAnchor');
+  if(log)setTimeout(()=>log.scrollIntoView({behavior:'smooth',block:'start'}),150);
+}
+
 /* HELPERS */
 function setRR(val,updChip=true){document.getElementById('rrTarget').value=val;if(updChip)document.querySelectorAll('.rrc').forEach(b=>b.classList.toggle('active',parseFloat(b.textContent)===val));calcSLTP();}
 function setDur(h,m){document.getElementById('tradeHours').value=h||'';document.getElementById('tradeMinutes').value=m||'';}
@@ -1098,21 +1252,37 @@ function initImgDrop(){
 
 /* ADD TRADE */
 function addTrade(){
+  const date=document.getElementById('tradeDate').value;
+  const time=document.getElementById('tradeTime').value||'';
+  const session=document.getElementById('tradeSession').value;
+  const note=document.getElementById('tradeNote').value;
+  if(!date){alert('กรุณาเลือก Date');return;}
+  if(!state.outcome){alert('กรุณาเลือก Outcome');return;}
+
+  if(quickAddMode){
+    /* QUICK ADD: minimal fields, PnL entered directly */
+    const pnlInput=document.getElementById('qaPnl').value;
+    if(pnlInput===''){alert('กรุณาใส่ PnL ($)');return;}
+    const pnl=parseFloat(pnlInput)||0;
+    const rp=parseFloat(document.getElementById('qaRiskPct').value)||null;
+    const trade={id:Date.now(),no:state.trades.length+1,date,time,session,entry:'—',sl:'—',tp:'—',rr:'—',fibo:'',mtf:getMTF(),tags:[...state.activeTags],outcome:state.outcome,pnl,lot:'—',leverage:currentLeverage,riskPct:rp?rp.toFixed(1):'—',riskAmt:'',balance:'',dir:state.direction,expName:state.lab.name||'Unnamed',expTF:[...state.lab.tf],duration:'',hypothesis:state.lab.hypothesis,note,exitPrice:null,realRR:null,mae:null,mfe:null,img:null,needsDetail:true};
+    state.trades.push(trade);saveToStorage();
+    renderAll();
+    showToast('ok',`Quick Add #${trade.no} — ${trade.outcome} ${trade.pnl>=0?'+':''}$${Math.abs(trade.pnl).toFixed(2)} (ต้องเติม detail)`);
+    clearForm();
+    autoCollapseOnMobile();
+    return;
+  }
+
   const sl=parseFloat(document.getElementById('slDist').value)||0;
   const rr=parseFloat(document.getElementById('rrTarget').value)||3;
   const tp=sl*rr;
   const entry=parseFloat(document.getElementById('entryPrice').value)||0;
-  const date=document.getElementById('tradeDate').value;
-  const time=document.getElementById('tradeTime').value||'';
-  const session=document.getElementById('tradeSession').value;
   const fibo=document.getElementById('fiboZone').value;
-  const note=document.getElementById('tradeNote').value;
   const exitP=parseFloat(document.getElementById('actualExitPrice').value)||null;
   const mae=parseFloat(document.getElementById('tradeMae').value)||null;
   const mfe=parseFloat(document.getElementById('tradeMfe').value)||null;
-  if(!date){alert('กรุณาเลือก Date');return;}
   if(!entry||entry<=0){alert('กรุณาใส่ Entry Price');return;}
-  if(!state.outcome){alert('กรุณาเลือก Outcome');return;}
   const bal=parseFloat(document.getElementById('accountBalance').value)||0;
   const rp=parseFloat(document.getElementById('riskPct').value)||1;
   const riskAmt=bal*(rp/100);
@@ -1124,9 +1294,10 @@ function addTrade(){
   const pnl=lot>0?(state.outcome==='WIN'?lot*100*(realRR?sl*realRR:tp):state.outcome==='LOSS'?-(lot*100*sl):0):(state.outcome==='WIN'?(realRR?sl*realRR:tp):state.outcome==='LOSS'?-sl:0);
   const trade={id:Date.now(),no:state.trades.length+1,date,time,session,entry:entry.toFixed(2),sl:sl.toFixed(2),tp:tp.toFixed(2),rr:`1:${rr.toFixed(1)}`,fibo,mtf:getMTF(),tags:[...state.activeTags],outcome:state.outcome,pnl,lot:lot.toFixed(2),leverage:currentLeverage,riskPct:rp.toFixed(1),riskAmt:riskAmt.toFixed(2),balance:bal.toFixed(0),dir:state.direction,expName:state.lab.name||'Unnamed',expTF:[...state.lab.tf],duration:getDurStr(),hypothesis:state.lab.hypothesis,note,exitPrice:exitP,realRR,mae,mfe,img:currentImgData||null};
   state.trades.push(trade);saveToStorage();
-  renderLog();renderStats();renderDashboard();renderTagPerformance();renderExpTracker();renderExpFilterTags();renderTagPairs();renderCalendar();renderWeeklyReflections();
+  renderAll();
   showToast('ok',`Trade #${trade.no} — ${trade.outcome} ${trade.pnl>=0?'+':''}$${Math.abs(trade.pnl).toFixed(2)}`);
   clearForm();
+  autoCollapseOnMobile();
 }
 
 /* CLEAR FORM */
@@ -1135,11 +1306,106 @@ function clearForm(){
   ['Win','Loss','BE'].forEach(x=>document.getElementById('btn'+x).classList.remove('active'));
   document.getElementById('tradeNote').value='';document.getElementById('tradeHours').value='';document.getElementById('tradeMinutes').value='';
   document.getElementById('actualExitPrice').value='';document.getElementById('tradeMae').value='';document.getElementById('tradeMfe').value='';
+  document.getElementById('qaPnl').value='';document.getElementById('qaRiskPct').value='';
   document.getElementById('realizedRRBox').style.display='none';
   removeImg();
   document.getElementById('rrTarget').value=state.lab.rr;
   document.getElementById('riskPct').value=state.lab.riskPct||1;
   setRR(state.lab.rr,true);renderSMCTags();calcSLTP();updateChecklist();
+}
+
+/* PENDING TRADES — PRE-TRADE PLANNING */
+const PEND_KEY='smc_pending_trades_v1';
+let pendingTrades=[];
+function loadPendingTrades(){try{pendingTrades=JSON.parse(localStorage.getItem(PEND_KEY)||'[]');}catch{pendingTrades=[];}}
+function savePendingTradesToStorage(){localStorage.setItem(PEND_KEY,JSON.stringify(pendingTrades));}
+function savePendingTrade(){
+  const date=document.getElementById('tradeDate').value;
+  const entry=parseFloat(document.getElementById('entryPrice').value)||0;
+  if(!entry||entry<=0){alert('กรุณาใส่ Entry Price ที่วางแผนไว้ก่อน');return;}
+  const sl=parseFloat(document.getElementById('slDist').value)||0;
+  const rr=parseFloat(document.getElementById('rrTarget').value)||3;
+  const tp=sl*rr;
+  const plan={
+    id:Date.now(),dir:state.direction,date,
+    time:document.getElementById('tradeTime').value||'',
+    session:document.getElementById('tradeSession').value,
+    entry:entry.toFixed(2),sl:sl.toFixed(2),tp:tp.toFixed(2),rr:`1:${rr.toFixed(1)}`,
+    fibo:document.getElementById('fiboZone').value,
+    mtf:getMTF(),tags:[...state.activeTags],
+    riskPct:(parseFloat(document.getElementById('riskPct').value)||1).toFixed(1),
+    note:document.getElementById('tradeNote').value,
+    expName:state.lab.name||'Unnamed',
+    createdAt:new Date().toISOString()
+  };
+  pendingTrades.push(plan);savePendingTradesToStorage();renderPending();
+  showToast('ok',`บันทึก Pending Plan — ${plan.dir} @ $${plan.entry}`);
+}
+function deletePendingTrade(id){pendingTrades=pendingTrades.filter(p=>p.id!==id);savePendingTradesToStorage();renderPending();showToast('info','ลบ Pending Plan แล้ว');}
+function fillFromPending(id){
+  const p=pendingTrades.find(x=>x.id===id);if(!p)return;
+  setDir(p.dir);
+  document.getElementById('tradeDate').value=p.date||'';
+  document.getElementById('tradeTime').value=p.time||'';
+  const ss=document.getElementById('tradeSession');for(let o of ss.options)o.selected=o.value===p.session;
+  document.getElementById('entryPrice').value=p.entry;
+  document.getElementById('slDist').value=p.sl;
+  document.getElementById('rrTarget').value=parseFloat(p.rr.split(':')[1])||3;
+  const fs=document.getElementById('fiboZone');for(let o of fs.options)o.selected=o.value===p.fibo;
+  document.getElementById('riskPct').value=p.riskPct;
+  document.getElementById('tradeNote').value=p.note||'';
+  state.activeTags=[...(p.tags||[])];
+  renderSMCTags();calcSLTP();calcLot();updateChecklist();
+  // Switch out of Quick Add since we now have full plan detail to work with
+  if(quickAddMode)setQuickAdd(false);
+  deletePendingTrade(id);
+  expandSidebarIfCollapsed();
+  showToast('ok',`โหลด Plan เข้าฟอร์ม — กรอก Outcome แล้วกด Add Trade`);
+  document.getElementById('tradeSetupSec').scrollIntoView({behavior:'smooth',block:'start'});
+}
+let pendingOpen=true;
+function togglePending(){pendingOpen=!pendingOpen;document.getElementById('pendingBody').style.display=pendingOpen?'block':'none';document.getElementById('pendToggleIcon').textContent=pendingOpen?'▾':'▸';}
+function renderPending(){
+  const wrap=document.getElementById('pendingWrap');
+  const badgeWrap=document.getElementById('pendCountBadgeWrap');
+  badgeWrap.innerHTML=pendingTrades.length?`<span class="pendcountbadge">${pendingTrades.length}</span>`:'';
+  if(!pendingTrades.length){wrap.innerHTML='<div class="pendempty">ยังไม่มี pending trade — กด "Save as Pending Plan" ในฟอร์มเพื่อบันทึก setup ที่วางแผนไว้ก่อน entry</div>';return;}
+  wrap.innerHTML=[...pendingTrades].reverse().map(p=>{
+    const ago=timeAgo(p.createdAt);
+    return`<div class="pendc">
+      <div class="pendtop">
+        <div class="pendtl">
+          <span class="pendbadge">⏳ PENDING</span>
+          <span class="bdg ${p.dir.toLowerCase()}">${p.dir}</span>
+          <span style="font-size:10px;color:var(--text-1);font-weight:600;">${p.date}${p.time?' '+p.time:''}</span>
+          <span style="font-size:9px;color:var(--text-2);">${p.session}</span>
+        </div>
+        <span style="font-size:9px;color:var(--text-2);">${ago}</span>
+      </div>
+      <div class="pendgrid">
+        <div class="tcc"><div class="tcck">Entry</div><div class="tccv">$${p.entry}</div></div>
+        <div class="tcc"><div class="tcck">SL</div><div class="tccv" style="color:var(--red)">$${p.sl}</div></div>
+        <div class="tcc"><div class="tcck">TP</div><div class="tccv" style="color:var(--green)">$${p.tp}</div></div>
+        <div class="tcc"><div class="tcck">R:R</div><div class="tccv" style="color:var(--gold)">${p.rr}</div></div>
+      </div>
+      <div class="tctags" style="margin-bottom:6px;">${(p.tags||[]).map(tg=>`<span class="tctag">${tg}</span>`).join('')}</div>
+      ${p.note?`<div class="pendnote">💬 ${p.note}</div>`:''}
+      <div class="pendact">
+        <button class="pendbtn del" onclick="deletePendingTrade(${p.id})">✕ ลบ</button>
+        <button class="pendbtn fill" onclick="fillFromPending(${p.id})">▶ ใช้ Plan นี้ — Entry แล้ว</button>
+      </div>
+    </div>`;
+  }).join('');
+}
+function timeAgo(iso){
+  if(!iso)return'';
+  const diffMs=Date.now()-new Date(iso).getTime();
+  const mins=Math.floor(diffMs/60000);
+  if(mins<1)return'เมื่อสักครู่';
+  if(mins<60)return`${mins}m ที่แล้ว`;
+  const hrs=Math.floor(mins/60);
+  if(hrs<24)return`${hrs}h ที่แล้ว`;
+  return`${Math.floor(hrs/24)}d ที่แล้ว`;
 }
 
 /* EXPERIMENT */
@@ -1254,6 +1520,7 @@ function renderLogCards(){
         <span class="bdg ${oc}">${t.outcome}</span>
         <span class="tcdate">${t.date}${timeStr}</span>
         <span style="font-size:9px;color:var(--text-2);">${t.session}</span>
+        ${t.needsDetail?'<span class="needs-detail-badge">⚡ NEEDS DETAIL</span>':''}
       </div><div><div class="tcpnl ${pc}">${ps}</div>${realRRBadge}</div></div>
       <div class="tcgrid">
         <div class="tcc"><div class="tcck">Entry</div><div class="tccv">$${t.entry}</div></div>
@@ -1271,6 +1538,7 @@ function renderLogCards(){
       ${t.duration?`<div style="font-size:9px;color:var(--text-2);margin-top:5px;">⏱ ${t.duration}</div>`:''}
       ${imgHtml}
       <div style="display:flex;gap:6px;margin-top:8px;justify-content:flex-end;">
+        ${t.needsDetail?`<button onclick="openEditTrade(${t.id})" style="padding:4px 10px;border-radius:5px;border:1px solid var(--gold-dim);background:#1a1208;color:var(--gold);font-size:9px;font-weight:700;cursor:pointer;">⚡ เติม Detail</button>`:''}
         <button onclick="openEditTrade(${t.id})" style="padding:4px 10px;border-radius:5px;border:1px solid var(--border);background:transparent;color:var(--text-2);font-size:9px;font-weight:600;cursor:pointer;" onmouseover="this.style.color='var(--lab)';this.style.borderColor='var(--lab)'" onmouseout="this.style.color='var(--text-2)';this.style.borderColor='var(--border)'">✏ Edit All</button>
         <button onclick="openEditNote(${t.id})" style="padding:4px 10px;border-radius:5px;border:1px solid var(--border);background:transparent;color:var(--text-2);font-size:9px;font-weight:600;cursor:pointer;" onmouseover="this.style.color='var(--gold)';this.style.borderColor='var(--gold)'" onmouseout="this.style.color='var(--text-2)';this.style.borderColor='var(--border)'">💬 Note</button>
       </div>
@@ -1293,7 +1561,7 @@ function renderLogTable(){
     <td style="color:var(--text-2);font-size:10px">${(t.fibo||'').split('—')[0].trim()}</td>
     <td style="color:var(--text-2);font-size:10px">${t.mtf}</td>
     <td>${(t.tags||[]).map(tg=>`<span style="font-size:9px;color:var(--blue);margin-right:3px">${tg}</span>`).join('')}</td>
-    <td><span class="bdg ${t.outcome.toLowerCase()}">${t.outcome}</span></td>
+    <td><span class="bdg ${t.outcome.toLowerCase()}">${t.outcome}</span>${t.needsDetail?' <span class="needs-detail-badge">⚡</span>':''}</td>
     <td style="color:${t.pnl>0?'var(--green)':t.pnl<0?'var(--red)':'var(--text-1)'}">${t.pnl>=0?'+':''}$${Math.abs(t.pnl).toFixed(2)}</td>
     <td><button class="delbtn" onclick="deleteTrade(${t.id})">✕</button></td>
   </tr>`).join('');
@@ -1312,7 +1580,7 @@ function confirmDeleteTrade(){
   state.trades=state.trades.filter(t=>t.id!==_pendingDelTrade);
   state.trades.forEach((t,i)=>t.no=i+1);
   _pendingDelTrade=null;saveToStorage();hideMdl('deleteTradeModal');
-  renderLog();renderStats();renderDashboard();renderTagPerformance();renderExpTracker();renderExpFilterTags();renderTagPairs();renderCalendar();renderWeeklyReflections();
+  renderAll();
   showToast('info','ลบ trade แล้ว');
 }
 
@@ -1339,6 +1607,9 @@ function openEditTrade(id){
   _etOutcome=t.outcome;
   ['Win','Loss','BE'].forEach(x=>document.getElementById('etBtn'+x).classList.remove('active'));
   if(t.outcome){const k=t.outcome==='WIN'?'Win':t.outcome==='LOSS'?'Loss':'BE';document.getElementById('etBtn'+k).classList.add('active');}
+  const hint=document.getElementById('etNeedsDetailHint');
+  if(t.needsDetail){hint.style.display='block';document.getElementById('etNeedsDetailPnl').textContent=(t.pnl>=0?'+':'')+'$'+Math.abs(t.pnl).toFixed(2);}
+  else{hint.style.display='none';}
   document.getElementById('editTradeModal').classList.add('show');
 }
 function setEtOutcome(o){_etOutcome=o;['Win','Loss','BE'].forEach(x=>document.getElementById('etBtn'+x).classList.remove('active'));const k=o==='WIN'?'Win':o==='LOSS'?'Loss':'BE';document.getElementById('etBtn'+k).classList.add('active');}
@@ -1355,7 +1626,9 @@ function saveEditTrade(){
   let realRR=t.realRR||null;
   if(exitP&&entry&&sl){const diff=t.dir==='BUY'?exitP-entry:entry-exitP;realRR=parseFloat((diff/sl).toFixed(2));}
   const lot=parseFloat(document.getElementById('etLot').value)||parseFloat(t.lot)||0;
-  const pnl=lot>0?(_etOutcome==='WIN'?lot*100*(realRR?sl*realRR:tp):_etOutcome==='LOSS'?-(lot*100*sl):0):(_etOutcome==='WIN'?(realRR?sl*realRR:tp):_etOutcome==='LOSS'?-sl:0);
+  // Keep the manually-entered PnL from Quick Add — don't recalculate it from lot/SL/TP,
+  // since the actual fill/slippage already determined the real PnL.
+  const pnl=t.needsDetail?t.pnl:(lot>0?(_etOutcome==='WIN'?lot*100*(realRR?sl*realRR:tp):_etOutcome==='LOSS'?-(lot*100*sl):0):(_etOutcome==='WIN'?(realRR?sl*realRR:tp):_etOutcome==='LOSS'?-sl:0));
   t.date=document.getElementById('etDate').value;t.time=document.getElementById('etTime').value;
   t.dir=document.getElementById('etDir').value;t.session=document.getElementById('etSession').value;
   t.entry=entry.toFixed(2);t.sl=sl.toFixed(2);t.tp=tp.toFixed(2);t.rr=`1:${rr.toFixed(1)}`;
@@ -1365,9 +1638,15 @@ function saveEditTrade(){
   t.mfe=parseFloat(document.getElementById('etMfe').value)||null;
   t.note=document.getElementById('etNote').value;t.fibo=document.getElementById('etFibo').value;
   t.outcome=_etOutcome;t.pnl=pnl;
+  delete t.needsDetail;
   saveToStorage();hideMdl('editTradeModal');
-  renderLog();renderStats();renderDashboard();renderTagPerformance();renderExpTracker();renderExpFilterTags();renderTagPairs();renderCalendar();renderWeeklyReflections();
+  renderAll();
   showToast('ok',`Trade #${t.no} อัปเดตแล้ว`);
+}
+
+/* RENDER ALL — full re-render chain after any data mutation */
+function renderAll(){
+  renderLog();renderStats();renderDashboard();renderTagPerformance();renderExpTracker();renderExpFilterTags();renderTagPairs();renderCalendar();renderWeeklyReflections();renderSessionAnalysis();
 }
 
 /* STATS */
@@ -1390,6 +1669,10 @@ function renderStats(){
   document.getElementById('statEV').textContent=ev!==null?(ev>=0?'+':'')+'$'+ev:'—';
   document.getElementById('statStreak').textContent=mw;document.getElementById('statMaxLoss').textContent='Max Loss: '+ml;
   document.getElementById('statAvgRR').textContent=avg;document.getElementById('statPF').textContent=pf;
+  // % Growth (vs starting balance)
+  const gEl=document.getElementById('statGrowthPct');const gSub=document.getElementById('statGrowthSub');
+  if(!startingBalance){gEl.textContent='—';gEl.className='sv neu';gSub.textContent='คลิกตั้ง starting balance';}
+  else{const pct=(tot/startingBalance)*100;gEl.textContent=(pct>=0?'+':'')+pct.toFixed(2)+'%';gEl.className='sv '+(pct>0?'pos':pct<0?'neg':'neu');gSub.textContent=`$${startingBalance.toLocaleString()} → $${(startingBalance+tot).toLocaleString(undefined,{maximumFractionDigits:0})}`;}
   // Current streak display
   const cs=document.getElementById('statCurrentStreak');const csub=document.getElementById('statCurrentStreakSub');
   if(!n){cs.textContent='—';cs.className='sv neu';csub.textContent='no trades';}
@@ -1592,6 +1875,51 @@ function renderTagPerformance(){
   grid.innerHTML=tags.map(tag=>{const p=perf[tag];const wr=((p.wins/p.total)*100).toFixed(0);return`<div class="tpc"><div class="tpcn">${tag}</div><div class="tpcs"><div class="tpci"><div class="k">Trades</div><div class="v" style="color:var(--text-0)">${p.total}</div></div><div class="tpci"><div class="k">WR%</div><div class="v" style="color:${parseInt(wr)>=50?'var(--green)':'var(--red)'}">${wr}%</div></div><div class="tpci"><div class="k">PnL</div><div class="v" style="color:${p.pnl>=0?'var(--green)':'var(--red)'}">$${p.pnl.toFixed(1)}</div></div></div></div>`;}).join('');
 }
 
+/* SESSION ANALYSIS */
+function renderSessionAnalysis(){
+  const grid=document.getElementById('sessionGrid');if(!grid)return;
+  const perf={};
+  state.trades.forEach(t=>{
+    const s=t.session||'Unknown';
+    if(!perf[s])perf[s]={wins:0,losses:0,total:0,pnl:0};
+    perf[s].total++;
+    if(t.outcome==='WIN')perf[s].wins++;
+    else if(t.outcome==='LOSS')perf[s].losses++;
+    perf[s].pnl+=(typeof t.pnl==='number'?t.pnl:0);
+  });
+  const sessions=Object.keys(perf);
+  if(!sessions.length){grid.innerHTML='<div style="color:var(--text-2);font-size:12px;">ยังไม่มีข้อมูล</div>';return;}
+  // find best/worst by WR (min 1 trade), only mark if >1 session present
+  const withWR=sessions.map(s=>({s,wr:perf[s].total?(perf[s].wins/perf[s].total)*100:0,n:perf[s].total}));
+  const eligible=withWR.filter(x=>x.n>=1);
+  let bestS=null,worstS=null;
+  if(eligible.length>1){
+    bestS=eligible.reduce((a,b)=>b.wr>a.wr?b:a).s;
+    worstS=eligible.reduce((a,b)=>b.wr<a.wr?b:a).s;
+    if(bestS===worstS){bestS=null;worstS=null;}
+  }
+  // preferred display order
+  const order=['London','New York','Asian','London/NY Overlap'];
+  const sorted=sessions.sort((a,b)=>{const ia=order.indexOf(a),ib=order.indexOf(b);return(ia<0?99:ia)-(ib<0?99:ib);});
+  grid.innerHTML=sorted.map(s=>{
+    const p=perf[s];const wr=p.total?((p.wins/p.total)*100).toFixed(0):'—';
+    const ev=p.total?(p.pnl/p.total).toFixed(2):'—';
+    const cls=s===bestS?'best':s===worstS?'worst':'';
+    const crown=s===bestS?'<span class="sesscrown" title="WR ดีที่สุด">👑</span>':s===worstS?'<span class="sesscrown" title="WR แย่ที่สุด">⚠️</span>':'';
+    return`<div class="sessc ${cls}">
+      <div class="sessn"><span>${s}</span>${crown}</div>
+      <div class="sesss">
+        <div class="sessi"><div class="k">Trades</div><div class="v" style="color:var(--text-0)">${p.total}</div></div>
+        <div class="sessi"><div class="k">WR%</div><div class="v" style="color:${p.total&&parseInt(wr)>=50?'var(--green)':'var(--red)'}">${wr}${p.total?'%':''}</div></div>
+      </div>
+      <div class="sesss" style="margin-top:6px;">
+        <div class="sessi"><div class="k">PnL</div><div class="v" style="color:${p.pnl>=0?'var(--green)':'var(--red)'}">${p.pnl>=0?'+':''}$${Math.abs(p.pnl).toFixed(0)}</div></div>
+        <div class="sessi"><div class="k">EV/Trade</div><div class="v" style="color:var(--gold)">${ev!=='—'?(parseFloat(ev)>=0?'+':'')+'$'+ev:'—'}</div></div>
+      </div>
+    </div>`;
+  }).join('');
+}
+
 /* WORKFLOW */
 function renderWF(){document.getElementById('wfGrid').innerHTML=LAB_WF.map((s,i)=>`<div class="wfs"><div class="wfnum">0${i+1}</div><div class="wftitle">${s.t}</div><div class="wfdesc">${s.d}</div></div>`).join('');}
 let wfOpen=true;
@@ -1624,7 +1952,7 @@ function saveToStorage(){
     if(kb>3000)showToast('info',`Storage ใหญ่ ${kb}KB — แนะนำ Export สำรอง`);
   }catch(e){showToast('err','Storage เต็ม — Export ก่อนเพิ่มรูปใหม่');}
 }
-function loadFromStorage(){try{const raw=localStorage.getItem(LS_KEY);if(!raw)return;const parsed=JSON.parse(raw);if(Array.isArray(parsed)&&parsed.length){state.trades=parsed;renderLog();renderStats();renderDashboard();renderTagPerformance();renderExpTracker();renderExpFilterTags();renderTagPairs();renderCalendar();renderWeeklyReflections();showToast('ok',`โหลด ${parsed.length} trades`);}}catch(e){showToast('err','โหลดไม่สำเร็จ');}}
+function loadFromStorage(){try{const raw=localStorage.getItem(LS_KEY);if(!raw)return;const parsed=JSON.parse(raw);if(Array.isArray(parsed)&&parsed.length){state.trades=parsed;renderAll();showToast('ok',`โหลด ${parsed.length} trades`);}}catch(e){showToast('err','โหลดไม่สำเร็จ');}}
 function updateSBdg(s){document.getElementById('storageDot').style.background=s?'var(--green)':'var(--gold)';document.getElementById('storageInfo').textContent=`Saved · ${state.trades.length} trades`;}
 
 /* EXPORT/IMPORT */
@@ -1633,18 +1961,20 @@ function exportJSON(){if(!state.trades.length){showToast('info','ยังไม
 async function copyCSV(){if(!state.trades.length){showToast('info','ยังไม่มี trade');return;}const h=['#','Date','Dir','Session','Experiment','Entry','SL$','TP$','RR','Lot','Lev','Risk%','Risk$','Tags','Outcome','PnL($)'];const rows=state.trades.map(t=>[t.no,t.date,t.dir,t.session,t.expName||'',t.entry,t.sl,t.tp,t.rr,t.lot,t.leverage,t.riskPct,t.riskAmt||'',(t.tags||[]).join(' | '),t.outcome,t.pnl.toFixed(2)]);await clip([h.join('\t'),...rows.map(r=>r.join('\t'))].join('\n'),`Copy CSV — ${state.trades.length} trades`);}
 async function copyJSON(){if(!state.trades.length){showToast('info','ยังไม่มี trade');return;}await clip(JSON.stringify({exportedAt:new Date().toISOString(),version:'2.0-lab',trades:state.trades},null,2),'Copy JSON');}
 async function clip(text,msg){try{if(navigator.clipboard&&navigator.clipboard.writeText){await navigator.clipboard.writeText(text);showToast('ok',msg);}else{const ta=document.createElement('textarea');ta.value=text;ta.style.cssText='position:fixed;opacity:0;';document.body.appendChild(ta);ta.focus();ta.select();document.execCommand('copy');document.body.removeChild(ta);showToast('ok',msg);}}catch(err){showCopyMdl(text);}}
-function importJSON(ev){const file=ev.target.files[0];if(!file)return;const r=new FileReader();r.onload=e=>{try{const p=JSON.parse(e.target.result);const inc=Array.isArray(p)?p:(p.trades||[]);if(!inc.length){showToast('err','ไม่พบข้อมูล');return;}const ex=new Set(state.trades.map(t=>t.id));const nt=inc.filter(t=>!ex.has(t.id));state.trades=[...state.trades,...nt];state.trades.forEach((t,i)=>t.no=i+1);saveToStorage();renderLog();renderStats();renderDashboard();renderTagPerformance();renderExpTracker();renderExpFilterTags();renderTagPairs();renderCalendar();renderWeeklyReflections();showToast('ok',`Import — เพิ่ม ${nt.length} trades`);}catch(err){showToast('err','ไฟล์ไม่ถูกต้อง');}ev.target.value='';};r.readAsText(file);}
+function importJSON(ev){const file=ev.target.files[0];if(!file)return;const r=new FileReader();r.onload=e=>{try{const p=JSON.parse(e.target.result);const inc=Array.isArray(p)?p:(p.trades||[]);if(!inc.length){showToast('err','ไม่พบข้อมูล');return;}const ex=new Set(state.trades.map(t=>t.id));const nt=inc.filter(t=>!ex.has(t.id));state.trades=[...state.trades,...nt];state.trades.forEach((t,i)=>t.no=i+1);saveToStorage();renderAll();showToast('ok',`Import — เพิ่ม ${nt.length} trades`);}catch(err){showToast('err','ไฟล์ไม่ถูกต้อง');}ev.target.value='';};r.readAsText(file);}
 
 /* MODALS */
 function hideMdl(id){document.getElementById(id).classList.remove('show');}
 function showClearModal(){document.getElementById('clearModal').classList.add('show');}
-function clearAllTrades(){state.trades=[];localStorage.removeItem(LS_KEY);hideMdl('clearModal');renderLog();renderStats();renderDashboard();renderTagPerformance();renderExpTracker();renderExpFilterTags();renderTagPairs();renderCalendar();renderWeeklyReflections();document.getElementById('storageDot').style.background='var(--text-2)';document.getElementById('storageInfo').textContent='Auto-save ON';showToast('info','เคลียข้อมูลแล้ว');}
+function clearAllTrades(){state.trades=[];localStorage.removeItem(LS_KEY);hideMdl('clearModal');renderAll();document.getElementById('storageDot').style.background='var(--text-2)';document.getElementById('storageInfo').textContent='Auto-save ON';showToast('info','เคลียข้อมูลแล้ว');}
 function editInstrument(){document.getElementById('instrumentInput').value=instrumentName;document.getElementById('instrumentModal').classList.add('show');setTimeout(()=>{const i=document.getElementById('instrumentInput');i.focus();i.select();},100);}
 function saveInstrument(){const v=(document.getElementById('instrumentInput').value.trim().toUpperCase())||'XAUUSD';instrumentName=v;localStorage.setItem('smc_instrument',v);document.getElementById('instrumentName').textContent=v;hideMdl('instrumentModal');showToast('ok',`Instrument → ${v}`);}
+function editStartBalance(){document.getElementById('startBalInput').value=startingBalance||'';document.getElementById('startBalModal').classList.add('show');setTimeout(()=>{const i=document.getElementById('startBalInput');i.focus();i.select();},100);}
+function saveStartBalance(){const v=parseFloat(document.getElementById('startBalInput').value);if(!v||v<=0){showToast('err','กรุณาใส่ตัวเลขที่มากกว่า 0');return;}startingBalance=v;localStorage.setItem(SB_KEY,String(v));hideMdl('startBalModal');renderStats();showToast('ok',`Starting Balance → $${v.toLocaleString()}`);}
 function openEditNote(id){const t=state.trades.find(x=>x.id===id);if(!t)return;document.getElementById('editNoteTradeId').value=id;document.getElementById('editNoteText').value=t.note||'';const dur=t.duration||'';const hm=dur.match(/(\d+)h/);const mm=dur.match(/(\d+)m/);document.getElementById('editHours').value=hm?hm[1]:'';document.getElementById('editMinutes').value=mm?mm[1]:'';document.getElementById('editNoteModal').classList.add('show');setTimeout(()=>document.getElementById('editNoteText').focus(),100);}
 function saveEditNote(){const id=parseInt(document.getElementById('editNoteTradeId').value);const note=document.getElementById('editNoteText').value.trim();const h=parseInt(document.getElementById('editHours').value)||0;const m=parseInt(document.getElementById('editMinutes').value)||0;const dur=((h?h+'h ':'')+( m?m+'m':'')).trim();const t=state.trades.find(x=>x.id===id);if(!t)return;t.note=note;t.duration=dur;saveToStorage();hideMdl('editNoteModal');renderLog();showToast('ok','บันทึก Note');}
 function showCopyMdl(text){document.getElementById('copyModalText').value=text;document.getElementById('copyModal').classList.add('show');setTimeout(()=>document.getElementById('copyModalText').select(),100);}
-['clearModal','deleteExpModal','deleteTradeModal','instrumentModal','editNoteModal','editTradeModal','copyModal'].forEach(id=>{document.getElementById(id).addEventListener('click',function(e){if(e.target===this)hideMdl(id);});});
+['clearModal','deleteExpModal','deleteTradeModal','instrumentModal','startBalModal','editNoteModal','editTradeModal','copyModal'].forEach(id=>{document.getElementById(id).addEventListener('click',function(e){if(e.target===this)hideMdl(id);});});
 
 /* CALENDAR */
 let calState={year:new Date().getFullYear(),month:new Date().getMonth(),open:true};
