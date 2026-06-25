@@ -3,28 +3,28 @@
 <head>
 <meta charset="UTF-8"/>
 <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-<title>SMC Trade Journal — XAUUSD</title>
+<title>CLICK &amp; PRAY JOURNAL</title>
 <style>
 :root{
   --bg-0:#0a0c0f;--bg-1:#111418;--bg-2:#181c22;--bg-3:#1f252e;--bg-4:#252d38;
   --border:#2a3240;--border-light:#323d4d;
   --text-0:#e8edf5;--text-1:#9ba8bb;--text-2:#5f6e83;
-  --gold:#f0b429;--gold-dim:#a07820;
+  --gold:#facc15;--gold-dim:#92750a;
   --green:#2dd4a0;--green-dim:#1a7a5e;
   --red:#f05c5c;--red-dim:#7a2222;
-  --blue:#5b9cf6;--blue-dim:#2a4a80;
-  --purple:#a78bfa;--lab:#a78bfa;
+  --blue:#60a5fa;--blue-dim:#1e3a5f;
+  --purple:#38bdf8;--lab:#38bdf8;
 }
 *{box-sizing:border-box;margin:0;padding:0;}
 body{background:var(--bg-0);color:var(--text-0);font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Arial,sans-serif;font-size:13px;min-height:100vh;overflow-x:hidden;}
 
 /* HEADER */
-.hdr{background:var(--bg-1);border-bottom:1px solid var(--border);padding:12px 20px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:100;flex-wrap:wrap;gap:8px;}
+.hdr{background:var(--bg-1);border-bottom:1px solid #1d4a6e;padding:12px 20px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:100;flex-wrap:wrap;gap:8px;}
 .hdr-left{display:flex;align-items:center;gap:14px;}
-.logo{width:38px;height:38px;background:linear-gradient(135deg,#7c3aed,#a78bfa);border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:18px;}
+.logo{width:38px;height:38px;background:linear-gradient(135deg,#1e3a5f,#38bdf8);border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:18px;}
 .hdr h1{font-size:14px;font-weight:700;letter-spacing:.05em;}
 .hdr p{font-size:10px;color:var(--text-2);letter-spacing:.12em;text-transform:uppercase;}
-.lab-badge{display:flex;align-items:center;gap:8px;padding:6px 12px;background:linear-gradient(135deg,#1a1230,#110d1e);border:1px solid #4a3580;border-radius:8px;font-size:11px;}
+.lab-badge{display:flex;align-items:center;gap:8px;padding:6px 12px;background:linear-gradient(135deg,#061421,#040f1a);border:1px solid #1d4a6e;border-radius:8px;font-size:11px;}
 .lab-dot{width:7px;height:7px;border-radius:50%;background:var(--lab);animation:pulse 2s infinite;}
 @keyframes pulse{0%,100%{opacity:1}50%{opacity:.4}}
 .dtb{display:flex;align-items:center;gap:6px;flex-wrap:wrap;}
@@ -39,7 +39,7 @@ body{background:var(--bg-0);color:var(--text-0);font-family:-apple-system,BlinkM
 .sdot{width:5px;height:5px;border-radius:50%;background:var(--green);}
 
 /* STAT STRIP */
-.sstrip{background:var(--bg-1);border-bottom:1px solid var(--border);padding:10px 20px;display:flex;gap:24px;overflow-x:auto;}
+.sstrip{background:var(--bg-1);border-bottom:1px solid #1d4a6e;padding:10px 20px;display:flex;gap:24px;overflow-x:auto;}
 .si{display:flex;flex-direction:column;gap:2px;min-width:90px;}
 .sl{font-size:9px;color:var(--text-2);text-transform:uppercase;letter-spacing:.1em;}
 .sv{font-size:18px;font-weight:700;font-family:'Consolas','Courier New',monospace;}
@@ -69,19 +69,19 @@ body{background:var(--bg-0);color:var(--text-0);font-family:-apple-system,BlinkM
 .labcfg{display:flex;flex-direction:column;gap:9px;}
 .lr3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:6px;}
 .lr2{display:grid;grid-template-columns:1fr 1fr;gap:6px;}
-.lh{font-size:9px;color:#6b5aa0;margin-bottom:3px;}
+.lh{font-size:9px;color:#3a7a9e;margin-bottom:3px;}
 .lsub{font-size:9px;font-weight:700;color:var(--lab);text-transform:uppercase;letter-spacing:.12em;margin-bottom:5px;}
-.linp{background:#1a1230;border:1px solid #4a3580;border-radius:6px;padding:7px 9px;color:var(--text-0);font-family:'Consolas','Courier New',monospace;font-size:11px;font-weight:600;width:100%;outline:none;transition:border-color .2s;}
+.linp{background:#061421;border:1px solid #1d4a6e;border-radius:6px;padding:7px 9px;color:var(--text-0);font-family:'Consolas','Courier New',monospace;font-size:11px;font-weight:600;width:100%;outline:none;transition:border-color .2s;}
 .linp:focus{border-color:var(--lab);}
-.lsel{background:#1a1230;border:1px solid #4a3580;border-radius:6px;padding:7px 8px;color:var(--text-0);font-family:'Consolas','Courier New',monospace;font-size:11px;font-weight:600;width:100%;outline:none;cursor:pointer;}
+.lsel{background:#061421;border:1px solid #1d4a6e;border-radius:6px;padding:7px 8px;color:var(--text-0);font-family:'Consolas','Courier New',monospace;font-size:11px;font-weight:600;width:100%;outline:none;cursor:pointer;}
 .lsel:focus{border-color:var(--lab);}
-.lnameinp{background:#1a1230;border:1px solid #4a3580;border-radius:7px;padding:9px 11px;color:var(--text-0);font-family:inherit;font-size:13px;font-weight:600;width:100%;outline:none;transition:border-color .2s;}
+.lnameinp{background:#061421;border:1px solid #1d4a6e;border-radius:7px;padding:9px 11px;color:var(--text-0);font-family:inherit;font-size:13px;font-weight:600;width:100%;outline:none;transition:border-color .2s;}
 .lnameinp:focus{border-color:var(--lab);}
 .lnameinp::placeholder{color:var(--text-2);font-weight:400;}
-.ltxt{background:#1a1230;border:1px solid #4a3580;border-radius:7px;padding:9px 11px;color:var(--text-0);font-family:inherit;font-size:11px;width:100%;outline:none;resize:vertical;min-height:54px;line-height:1.5;}
+.ltxt{background:#061421;border:1px solid #1d4a6e;border-radius:7px;padding:9px 11px;color:var(--text-0);font-family:inherit;font-size:11px;width:100%;outline:none;resize:vertical;min-height:54px;line-height:1.5;}
 .ltxt:focus{border-color:var(--lab);}
 .ltxt::placeholder{color:var(--text-2);}
-.lhint{font-size:9px;color:#6b5aa0;line-height:1.5;}
+.lhint{font-size:9px;color:#3a7a9e;line-height:1.5;}
 
 /* QUICK ADD TOGGLE */
 .qaswitch{display:flex;align-items:center;justify-content:space-between;background:var(--bg-3);border:1px solid var(--border);border-radius:8px;padding:8px 10px;margin-bottom:10px;}
@@ -90,7 +90,7 @@ body{background:var(--bg-0);color:var(--text-0);font-family:-apple-system,BlinkM
 .qaswitch-lbl span{font-size:9px;color:var(--text-2);}
 .qatoggle{position:relative;width:38px;height:20px;border-radius:10px;background:var(--bg-4);border:1px solid var(--border);cursor:pointer;flex-shrink:0;transition:all .2s;}
 .qatoggle::after{content:'';position:absolute;top:2px;left:2px;width:14px;height:14px;border-radius:50%;background:var(--text-2);transition:all .2s;}
-.qatoggle.on{background:#3d2d6e;border-color:var(--lab);}
+.qatoggle.on{background:#0a1e30;border-color:var(--lab);}
 .qatoggle.on::after{left:20px;background:var(--lab);}
 .qa-fields{display:none;}
 .qa-fields.show{display:block;}
@@ -223,8 +223,8 @@ body{background:var(--bg-0);color:var(--text-0);font-family:-apple-system,BlinkM
 .outbtn.win.active{background:var(--green);border-color:var(--green);color:#000;}
 .outbtn.loss.active{background:var(--red);border-color:var(--red);color:#fff;}
 .outbtn.be.active{background:var(--bg-4);border-color:var(--text-1);color:var(--text-0);}
-.addbtn{width:100%;padding:11px;margin-top:10px;border-radius:8px;border:none;background:var(--lab);color:#fff;font-weight:700;font-size:12px;cursor:pointer;font-family:inherit;letter-spacing:.04em;transition:all .2s;}
-.addbtn:hover{background:#c4b5fd;box-shadow:0 0 16px #a78bfa44;}
+.addbtn{width:100%;padding:11px;margin-top:10px;border-radius:8px;border:none;background:var(--lab);color:#000;font-weight:800;font-size:12px;cursor:pointer;font-family:inherit;letter-spacing:.06em;transition:all .2s;}
+.addbtn:hover{background:#7dd3fc;box-shadow:0 0 16px #38bdf844;}
 .clrbtn{width:100%;padding:8px;border-radius:8px;border:1px solid var(--border);background:transparent;color:var(--text-2);font-size:11px;cursor:pointer;font-family:inherit;transition:all .2s;margin-top:6px;}
 .clrbtn:hover{color:var(--text-1);border-color:var(--border-light);}
 
@@ -250,7 +250,7 @@ body{background:var(--bg-0);color:var(--text-0);font-family:-apple-system,BlinkM
 .wfg{display:grid;grid-template-columns:repeat(4,1fr);gap:7px;}
 .wfs{background:var(--bg-2);border:1px solid var(--border);border-radius:8px;padding:9px 10px;border-top-width:2px;transition:transform .15s;cursor:default;}
 .wfs:hover{transform:translateY(-1px);border-color:var(--gold)!important;}
-.wfs:nth-child(8n+1){border-top-color:#5b9cf6;}.wfs:nth-child(8n+2){border-top-color:#2dd4a0;}.wfs:nth-child(8n+3){border-top-color:#f0b429;}.wfs:nth-child(8n+4){border-top-color:#f05c5c;}.wfs:nth-child(8n+5){border-top-color:#a78bfa;}.wfs:nth-child(8n+6){border-top-color:#34d399;}.wfs:nth-child(8n+7){border-top-color:#fb923c;}.wfs:nth-child(8n+8){border-top-color:#e879f9;}
+.wfs:nth-child(8n+1){border-top-color:#5b9cf6;}.wfs:nth-child(8n+2){border-top-color:#2dd4a0;}.wfs:nth-child(8n+3){border-top-color:#f0b429;}.wfs:nth-child(8n+4){border-top-color:#f05c5c;}.wfs:nth-child(8n+5){border-top-color:#38bdf8;}.wfs:nth-child(8n+6){border-top-color:#34d399;}.wfs:nth-child(8n+7){border-top-color:#fb923c;}.wfs:nth-child(8n+8){border-top-color:#e879f9;}
 .wfnum{font-size:16px;font-weight:700;font-family:monospace;color:var(--border-light);line-height:1;margin-bottom:4px;}
 .wftitle{font-size:10px;font-weight:700;color:var(--text-0);margin-bottom:3px;}
 .wfdesc{font-size:9px;color:var(--text-2);line-height:1.45;}
@@ -319,18 +319,18 @@ body{background:var(--bg-0);color:var(--text-0);font-family:-apple-system,BlinkM
 
 /* EXP TRACKER */
 .exptg{display:flex;flex-direction:column;gap:10px;}
-.expc{background:var(--bg-2);border:1px solid #3d2d6e;border-radius:10px;overflow:hidden;}
+.expc{background:var(--bg-2);border:1px solid #1d4a6e;border-radius:10px;overflow:hidden;}
 .expc.actexp{border-color:var(--lab);}
 .expch{background:linear-gradient(135deg,#0f0b1a,#131020);padding:10px 14px;display:flex;align-items:center;justify-content:space-between;cursor:pointer;}
 .expch:hover{background:#161230;}
 .expname{font-size:12px;font-weight:700;color:var(--lab);display:flex;align-items:center;gap:6px;}
-.expsr{padding:10px 14px;display:grid;grid-template-columns:repeat(4,1fr);gap:8px;border-top:1px solid #2a1f40;}
+.expsr{padding:10px 14px;display:grid;grid-template-columns:repeat(4,1fr);gap:8px;border-top:1px solid #0f2d45;}
 .expst{display:flex;flex-direction:column;gap:2px;}
 .expstk{font-size:8px;color:var(--text-2);text-transform:uppercase;letter-spacing:.08em;}
 .expstv{font-size:13px;font-weight:700;font-family:monospace;}
-.exphypo{padding:8px 14px;font-size:10px;color:var(--text-2);border-top:1px solid #2a1f40;font-style:italic;line-height:1.5;}
+.exphypo{padding:8px 14px;font-size:10px;color:var(--text-2);border-top:1px solid #0f2d45;font-style:italic;line-height:1.5;}
 .exptfr{padding:6px 14px 10px;display:flex;gap:6px;flex-wrap:wrap;}
-.exptfb{font-size:9px;padding:2px 8px;border-radius:4px;background:#1a1230;color:var(--purple);border:1px solid #4a3580;font-family:monospace;font-weight:600;}
+.exptfb{font-size:9px;padding:2px 8px;border-radius:4px;background:#061421;color:var(--purple);border:1px solid #1d4a6e;font-family:monospace;font-weight:600;}
 .expfb{font-size:9px;padding:3px 8px;border-radius:4px;border:1px solid var(--lab);background:transparent;color:var(--lab);cursor:pointer;font-weight:600;}
 
 /* MODALS */
@@ -416,7 +416,18 @@ body{background:var(--bg-0);color:var(--text-0);font-family:-apple-system,BlinkM
 .vtab{padding:6px 14px;border-radius:7px 7px 0 0;border:1px solid var(--border);border-bottom:none;background:var(--bg-2);color:var(--text-2);font-size:10px;font-weight:700;cursor:pointer;font-family:inherit;letter-spacing:.04em;transition:all .15s;}
 .vtab.active{background:var(--bg-1);color:var(--text-0);border-color:var(--border-light);}
 
-/* STORAGE WARNING */
+/* RAGE BANNER */
+.rage-banner{display:none;align-items:center;gap:12px;padding:12px 16px;background:linear-gradient(135deg,#1a0505,#2a0808);border:1px solid var(--red);border-radius:10px;animation:ragePulse 1.5s infinite;}
+.rage-banner.show{display:flex;}
+@keyframes ragePulse{0%,100%{border-color:var(--red);box-shadow:0 0 8px #f05c5c33;}50%{border-color:#ff8080;box-shadow:0 0 20px #f05c5c66;}}
+.rage-icon{font-size:28px;flex-shrink:0;animation:rageShake .4s infinite;}
+@keyframes rageShake{0%,100%{transform:rotate(-5deg);}50%{transform:rotate(5deg);}}
+.rage-text{flex:1;}
+.rage-title{font-size:13px;font-weight:800;color:var(--red);letter-spacing:.04em;margin-bottom:3px;}
+.rage-sub{font-size:10px;color:#cc8888;line-height:1.5;}
+.rage-dismiss{padding:5px 12px;border-radius:6px;border:1px solid var(--red-dim);background:transparent;color:var(--red);font-size:10px;font-weight:700;cursor:pointer;font-family:inherit;white-space:nowrap;transition:all .15s;flex-shrink:0;}
+.rage-dismiss:hover{background:#2a0808;border-color:var(--red);}
+
 .storage-warn{display:none;align-items:center;gap:6px;background:#1a1208;border:1px solid var(--gold-dim);border-radius:6px;padding:6px 10px;font-size:10px;color:var(--gold);margin-top:4px;}
 .storage-warn.show{display:flex;}
 
@@ -446,12 +457,12 @@ body{background:var(--bg-0);color:var(--text-0);font-family:-apple-system,BlinkM
 <div class="hdr">
 
   <div class="hdr-left">
-    <div class="logo">🧪</div>
+    <div class="logo">🙏</div>
     <div>
       <h1 onclick="editInstrument()" style="cursor:pointer;">
-        SMC LAB JOURNAL <span style="font-size:10px;color:var(--text-2);font-weight:400;">✎</span>
+        CLICK &amp; PRAY JOURNAL <span style="font-size:10px;color:var(--text-2);font-weight:400;">✎</span>
       </h1>
-      <p>Lab Mode · Custom TF · Experiment Tracking —
+      <p>"We don't analyze, we beg" ·
         <span id="instrumentName" style="color:var(--lab);cursor:pointer;" onclick="editInstrument()">XAUUSD</span>
       </p>
     </div>
@@ -541,7 +552,7 @@ body{background:var(--bg-0);color:var(--text-0);font-family:-apple-system,BlinkM
           <input type="text" class="lnameinp" id="labExpName" placeholder="เช่น Live Account · Paper Trading · ICT 2024" oninput="onLabChange()" maxlength="80" style="flex:1;"/>
           <button onclick="saveExperiment()"
             style="padding:7px 12px;border-radius:7px;border:1px solid var(--lab);background:transparent;color:var(--lab);cursor:pointer;font-size:11px;font-weight:700;white-space:nowrap;transition:all .15s;"
-            onmouseover="this.style.background='#1a1230'" onmouseout="this.style.background='transparent'">💾 Save</button>
+            onmouseover="this.style.background='#061421'" onmouseout="this.style.background='transparent'">💾 Save</button>
         </div>
       </div>
       <div>
@@ -673,7 +684,7 @@ body{background:var(--bg-0);color:var(--text-0);font-family:-apple-system,BlinkM
           <div class="lotcard dng"><div class="lck">❌ Loss at SL</div><div class="lcv" id="lotMaxLoss" style="color:var(--red)">$0.00</div><div class="lcs" id="lotLossSub">if LOSS</div></div>
           <div class="lotcard"><div class="lck">🔒 Margin Req.</div><div class="lcv" id="lotMargin" style="color:var(--blue)">$0.00</div><div class="lcs" id="lotMarginPct">0%</div></div>
           <div class="lotcard"><div class="lck">💰 Free Margin</div><div class="lcv" id="lotFreeMargin" style="color:var(--text-0)">$0.00</div><div class="lcs" id="lotFreeMarginPct">100%</div></div>
-          <div class="lotcard wide" style="border-color:#4a3580;">
+          <div class="lotcard wide" style="border-color:#1d4a6e;">
             <div class="lck">📊 Pip Value (per $1 gold move)</div>
             <div style="display:flex;gap:16px;margin-top:4px;flex-wrap:wrap;">
               <div><div style="font-size:8px;color:var(--text-2);">This lot</div><div class="lcv" id="pipValueLot" style="color:var(--gold);font-size:12px;">—</div></div>
@@ -712,7 +723,7 @@ body{background:var(--bg-0);color:var(--text-0);font-family:-apple-system,BlinkM
         onfocus="this.style.borderColor='var(--lab)'" onblur="this.style.borderColor='var(--border)'"/>
       <button onclick="addCustomTag()"
         style="padding:6px 12px;border-radius:6px;border:1px solid #4a3580;background:transparent;color:var(--lab);font-size:11px;font-weight:700;cursor:pointer;white-space:nowrap;"
-        onmouseover="this.style.background='#1a1230'" onmouseout="this.style.background='transparent'">+ Add</button>
+        onmouseover="this.style.background='#061421'" onmouseout="this.style.background='transparent'">+ Add</button>
     </div>
   </div>
 
@@ -772,9 +783,15 @@ body{background:var(--bg-0);color:var(--text-0);font-family:-apple-system,BlinkM
 
   <!-- CHECKLIST -->
   <div class="sec detail-fields">
-    <div class="stitle">Entry Checklist</div>
-    <div class="slbl"><span>Score</span><span id="checkScore" style="color:var(--gold);font-weight:700;">—</span></div>
-    <div class="sbar"><div class="sbarfill" id="scoreBar" style="width:0%"></div></div>
+    <div class="stitle">🙏 Pray Meter</div>
+    <div class="slbl" style="align-items:flex-start;flex-direction:column;gap:4px;">
+      <div style="display:flex;align-items:center;justify-content:space-between;width:100%;">
+        <span id="prayEmoji" style="font-size:18px;letter-spacing:2px;line-height:1;">—</span>
+        <span id="checkScore" style="color:var(--gold);font-weight:700;font-family:monospace;font-size:13px;">—</span>
+      </div>
+      <div id="prayLabel" style="font-size:9px;color:var(--text-2);letter-spacing:.05em;">กรอก setup ก่อน</div>
+    </div>
+    <div class="sbar" style="margin-top:6px;"><div class="sbarfill" id="scoreBar" style="width:0%"></div></div>
     <div class="chklist" id="checkList" style="margin-top:12px;"></div>
   </div>
 
@@ -782,6 +799,16 @@ body{background:var(--bg-0);color:var(--text-0);font-family:-apple-system,BlinkM
 
 <!-- MAIN -->
 <div class="main">
+
+  <!-- RAGE MODE BANNER -->
+  <div class="rage-banner" id="rageBanner">
+    <div class="rage-icon">🚨</div>
+    <div class="rage-text">
+      <div class="rage-title" id="rageTitle">หยุดก่อน!</div>
+      <div class="rage-sub" id="rageSub">กำลัง revenge trade อยู่หรือเปล่า? — ปิดจอแล้วไปดื่มน้ำก่อน</div>
+    </div>
+    <button class="rage-dismiss" onclick="dismissRage()">ฉันโอเคแล้ว 🙏</button>
+  </div>
 
   <!-- PENDING TRADES (PRE-TRADE PLANNING) -->
   <div class="panel" id="pendingPanel">
@@ -1151,8 +1178,20 @@ function updateChecklist(){
   ];
   const passed=items.filter(i=>i.p).length;
   const pct=Math.round((passed/items.length)*100);
+  // --- PRAY METER ---
+  let prayEmoji='',prayLabel='',prayColor='var(--red)';
+  if(pct===0){prayEmoji='';prayLabel='ยังไม่ได้กรอกอะไรเลย 💀';prayColor='var(--text-2)';}
+  else if(pct<=20){prayEmoji='🙏';prayLabel='ขอพรแล้วกัน — setup แย่มาก';prayColor='var(--red)';}
+  else if(pct<=40){prayEmoji='🙏🙏';prayLabel='ยังไม่พร้อม — เปิดไปก็ pray';prayColor='var(--red)';}
+  else if(pct<=60){prayEmoji='🙏🙏🙏';prayLabel='พอไหว แต่ก็ต้องขอพรหน่อย';prayColor='var(--gold)';}
+  else if(pct<=80){prayEmoji='🙏🙏🙏🙏';prayLabel='ใกล้แล้ว — pray เสริมดวงนิดนึง';prayColor='var(--gold)';}
+  else if(pct<100){prayEmoji='🙏🙏🙏🙏🙏';prayLabel='Setup ดีมาก — pray เพื่อความมั่นใจ';prayColor='var(--green)';}
+  else{prayEmoji='🙏🙏🙏🙏🙏⚡';prayLabel='FULL CHECKLIST — พระท่านตอบแล้ว!';prayColor='var(--green)';}
+  document.getElementById('prayEmoji').textContent=prayEmoji;
+  document.getElementById('prayLabel').textContent=prayLabel;
+  document.getElementById('prayLabel').style.color=prayColor;
   document.getElementById('checkScore').textContent=pct+'%';
-  document.getElementById('checkScore').style.color=pct>=75?'var(--green)':pct>=50?'var(--gold)':'var(--red)';
+  document.getElementById('checkScore').style.color=prayColor;
   document.getElementById('scoreBar').style.width=pct+'%';
   document.getElementById('scoreBar').style.background=pct>=75?'linear-gradient(90deg,var(--green-dim),var(--green))':pct>=50?'linear-gradient(90deg,var(--gold-dim),var(--gold))':'linear-gradient(90deg,var(--red-dim),var(--red))';
   document.getElementById('checkList').innerHTML=items.map(i=>`<div class="chkitem"><div class="chkdot ${i.p?'pass':'fail'}"></div><span>${i.l}</span></div>`).join('');
@@ -1258,6 +1297,8 @@ function addTrade(){
   const note=document.getElementById('tradeNote').value;
   if(!date){alert('กรุณาเลือก Date');return;}
   if(!state.outcome){alert('กรุณาเลือก Outcome');return;}
+  // Capture current Pray Meter score at the moment of adding
+  const checkPct=parseInt(document.getElementById('checkScore').textContent)||0;
 
   if(quickAddMode){
     /* QUICK ADD: minimal fields, PnL entered directly */
@@ -1265,7 +1306,7 @@ function addTrade(){
     if(pnlInput===''){alert('กรุณาใส่ PnL ($)');return;}
     const pnl=parseFloat(pnlInput)||0;
     const rp=parseFloat(document.getElementById('qaRiskPct').value)||null;
-    const trade={id:Date.now(),no:state.trades.length+1,date,time,session,entry:'—',sl:'—',tp:'—',rr:'—',fibo:'',mtf:getMTF(),tags:[...state.activeTags],outcome:state.outcome,pnl,lot:'—',leverage:currentLeverage,riskPct:rp?rp.toFixed(1):'—',riskAmt:'',balance:'',dir:state.direction,expName:state.lab.name||'Unnamed',expTF:[...state.lab.tf],duration:'',hypothesis:state.lab.hypothesis,note,exitPrice:null,realRR:null,mae:null,mfe:null,img:null,needsDetail:true};
+    const trade={id:Date.now(),no:state.trades.length+1,date,time,session,entry:'—',sl:'—',tp:'—',rr:'—',fibo:'',mtf:getMTF(),tags:[...state.activeTags],outcome:state.outcome,pnl,lot:'—',leverage:currentLeverage,riskPct:rp?rp.toFixed(1):'—',riskAmt:'',balance:'',dir:state.direction,expName:state.lab.name||'Unnamed',expTF:[...state.lab.tf],duration:'',hypothesis:state.lab.hypothesis,note,exitPrice:null,realRR:null,mae:null,mfe:null,img:null,needsDetail:true,checkPct:0};
     state.trades.push(trade);saveToStorage();
     renderAll();
     showToast('ok',`Quick Add #${trade.no} — ${trade.outcome} ${trade.pnl>=0?'+':''}$${Math.abs(trade.pnl).toFixed(2)} (ต้องเติม detail)`);
@@ -1292,10 +1333,11 @@ function addTrade(){
   let realRR=null;
   if(exitP&&entry&&sl){const diff=state.direction==='BUY'?exitP-entry:entry-exitP;realRR=parseFloat((diff/sl).toFixed(2));}
   const pnl=lot>0?(state.outcome==='WIN'?lot*100*(realRR?sl*realRR:tp):state.outcome==='LOSS'?-(lot*100*sl):0):(state.outcome==='WIN'?(realRR?sl*realRR:tp):state.outcome==='LOSS'?-sl:0);
-  const trade={id:Date.now(),no:state.trades.length+1,date,time,session,entry:entry.toFixed(2),sl:sl.toFixed(2),tp:tp.toFixed(2),rr:`1:${rr.toFixed(1)}`,fibo,mtf:getMTF(),tags:[...state.activeTags],outcome:state.outcome,pnl,lot:lot.toFixed(2),leverage:currentLeverage,riskPct:rp.toFixed(1),riskAmt:riskAmt.toFixed(2),balance:bal.toFixed(0),dir:state.direction,expName:state.lab.name||'Unnamed',expTF:[...state.lab.tf],duration:getDurStr(),hypothesis:state.lab.hypothesis,note,exitPrice:exitP,realRR,mae,mfe,img:currentImgData||null};
+  const trade={id:Date.now(),no:state.trades.length+1,date,time,session,entry:entry.toFixed(2),sl:sl.toFixed(2),tp:tp.toFixed(2),rr:`1:${rr.toFixed(1)}`,fibo,mtf:getMTF(),tags:[...state.activeTags],outcome:state.outcome,pnl,lot:lot.toFixed(2),leverage:currentLeverage,riskPct:rp.toFixed(1),riskAmt:riskAmt.toFixed(2),balance:bal.toFixed(0),dir:state.direction,expName:state.lab.name||'Unnamed',expTF:[...state.lab.tf],duration:getDurStr(),hypothesis:state.lab.hypothesis,note,exitPrice:exitP,realRR,mae,mfe,img:currentImgData||null,checkPct};
   state.trades.push(trade);saveToStorage();
+  const isLucky=trade.outcome==='WIN'&&trade.checkPct<50;
   renderAll();
-  showToast('ok',`Trade #${trade.no} — ${trade.outcome} ${trade.pnl>=0?'+':''}$${Math.abs(trade.pnl).toFixed(2)}`);
+  showToast('ok',`Trade #${trade.no} — ${trade.outcome} ${trade.pnl>=0?'+':''}$${Math.abs(trade.pnl).toFixed(2)}${isLucky?' 🍀 Lucky Trade!':''}`);
   clearForm();
   autoCollapseOnMobile();
 }
@@ -1473,7 +1515,7 @@ function renderExpTracker(){
     const pctHtml=pctProfit!==null?`<div class="expst"><div class="expstk">% Profit</div><div class="expstv" style="color:${pctProfit>=0?'var(--green)':'var(--red)'}">${pctProfit>=0?'+':''}${pctProfit.toFixed(2)}%</div></div>`:'';
     return`<div class="expc ${isA?'actexp':''}">
       <div class="expch" onclick="filterByExp('${name.replace(/'/g,"\\'")}')">
-        <div class="expname">${isA?'● ':''}${name}${isA?'<span style="font-size:9px;background:#3d2d6e;padding:2px 6px;border-radius:4px;margin-left:4px;">ACTIVE</span>':''}</div>
+        <div class="expname">${isA?'● ':''}${name}${isA?'<span style="font-size:9px;background:#0d2a40;padding:2px 6px;border-radius:4px;margin-left:4px;">ACTIVE</span>':''}</div>
         <div style="display:flex;align-items:center;gap:8px;"><span style="font-size:10px;color:var(--text-2);font-family:monospace;">${n} trades</span><button class="expfb" onclick="event.stopPropagation();filterByExp('${name.replace(/'/g,"\\'")}')">Filter</button></div>
       </div>
       <div class="expsr">
@@ -1493,7 +1535,7 @@ function renderExpFilterTags(){
   const exps=loadExperiments();const ln=[...new Set(state.trades.filter(t=>t.expName).map(t=>t.expName))];
   const all=[...new Set([...Object.keys(exps),...ln])];
   if(!all.length){c.innerHTML='';return;}
-  c.innerHTML='<span style="font-size:9px;color:#6b5aa0;margin:0 4px;">|</span>'+all.map(n=>`<span class="filtchip" style="border-color:#4a3580;color:#a78bfa;" onclick="filterByExp('${n.replace(/'/g,"\\'")}')">💼 ${n}</span>`).join('');
+  c.innerHTML='<span style="font-size:9px;color:#3a7a9e;margin:0 4px;">|</span>'+all.map(n=>`<span class="filtchip" style="border-color:#1d4a6e;color:#38bdf8;" onclick="filterByExp('${n.replace(/'/g,"\\'")}')">💼 ${n}</span>`).join('');
 }
 function filterByExp(name){state.logFilter='__exp__:'+name;document.querySelectorAll('.filtchip').forEach(e=>e.classList.remove('on'));renderLog();showToast('info',`กรอง: "${name}"`);}
 
@@ -1521,6 +1563,7 @@ function renderLogCards(){
         <span class="tcdate">${t.date}${timeStr}</span>
         <span style="font-size:9px;color:var(--text-2);">${t.session}</span>
         ${t.needsDetail?'<span class="needs-detail-badge">⚡ NEEDS DETAIL</span>':''}
+        ${(!t.needsDetail&&t.outcome==='WIN'&&(t.checkPct||0)<50)?'<span style="display:inline-block;padding:2px 7px;border-radius:4px;font-size:9px;font-weight:700;letter-spacing:.05em;background:#0a1a08;color:#4ade80;border:1px solid #166534;">🍀 Lucky</span>':''}
       </div><div><div class="tcpnl ${pc}">${ps}</div>${realRRBadge}</div></div>
       <div class="tcgrid">
         <div class="tcc"><div class="tcck">Entry</div><div class="tccv">$${t.entry}</div></div>
@@ -1538,6 +1581,7 @@ function renderLogCards(){
       ${t.duration?`<div style="font-size:9px;color:var(--text-2);margin-top:5px;">⏱ ${t.duration}</div>`:''}
       ${imgHtml}
       <div style="display:flex;gap:6px;margin-top:8px;justify-content:flex-end;">
+        ${t.needsDetail?`<button onclick="skipDetail(${t.id})" style="padding:4px 10px;border-radius:5px;border:1px solid var(--border);background:transparent;color:var(--text-2);font-size:9px;font-weight:600;cursor:pointer;" onmouseover="this.style.color='var(--text-1)';this.style.borderColor='var(--border-light)'" onmouseout="this.style.color='var(--text-2)';this.style.borderColor='var(--border)'">↩ ข้าม detail</button>`:''}
         ${t.needsDetail?`<button onclick="openEditTrade(${t.id})" style="padding:4px 10px;border-radius:5px;border:1px solid var(--gold-dim);background:#1a1208;color:var(--gold);font-size:9px;font-weight:700;cursor:pointer;">⚡ เติม Detail</button>`:''}
         <button onclick="openEditTrade(${t.id})" style="padding:4px 10px;border-radius:5px;border:1px solid var(--border);background:transparent;color:var(--text-2);font-size:9px;font-weight:600;cursor:pointer;" onmouseover="this.style.color='var(--lab)';this.style.borderColor='var(--lab)'" onmouseout="this.style.color='var(--text-2)';this.style.borderColor='var(--border)'">✏ Edit All</button>
         <button onclick="openEditNote(${t.id})" style="padding:4px 10px;border-radius:5px;border:1px solid var(--border);background:transparent;color:var(--text-2);font-size:9px;font-weight:600;cursor:pointer;" onmouseover="this.style.color='var(--gold)';this.style.borderColor='var(--gold)'" onmouseout="this.style.color='var(--text-2)';this.style.borderColor='var(--border)'">💬 Note</button>
@@ -1582,6 +1626,14 @@ function confirmDeleteTrade(){
   _pendingDelTrade=null;saveToStorage();hideMdl('deleteTradeModal');
   renderAll();
   showToast('info','ลบ trade แล้ว');
+}
+
+/* SKIP DETAIL — ปิด needsDetail flag โดยไม่ต้องกรอก detail */
+function skipDetail(id){
+  const t=state.trades.find(x=>x.id===id);if(!t)return;
+  delete t.needsDetail;
+  saveToStorage();renderAll();
+  showToast('ok',`Trade #${t.no} — ข้าม detail แล้ว`);
 }
 
 /* FULL EDIT TRADE */
@@ -1669,18 +1721,49 @@ function renderStats(){
   document.getElementById('statEV').textContent=ev!==null?(ev>=0?'+':'')+'$'+ev:'—';
   document.getElementById('statStreak').textContent=mw;document.getElementById('statMaxLoss').textContent='Max Loss: '+ml;
   document.getElementById('statAvgRR').textContent=avg;document.getElementById('statPF').textContent=pf;
-  // % Growth (vs starting balance)
+  // % Growth (vs starting balance) — คำนวณเฉพาะ trades ของ Portfolio ที่ active อยู่
   const gEl=document.getElementById('statGrowthPct');const gSub=document.getElementById('statGrowthSub');
+  const activePf=state.lab.name;
+  const pfTrades=activePf?t.filter(x=>x.expName===activePf):t;
+  const pfTot=pfTrades.reduce((a,x)=>a+x.pnl,0);
+  const pfLabel=activePf?`[${activePf}]`:'[All]';
   if(!startingBalance){gEl.textContent='—';gEl.className='sv neu';gSub.textContent='คลิกตั้ง starting balance';}
-  else{const pct=(tot/startingBalance)*100;gEl.textContent=(pct>=0?'+':'')+pct.toFixed(2)+'%';gEl.className='sv '+(pct>0?'pos':pct<0?'neg':'neu');gSub.textContent=`$${startingBalance.toLocaleString()} → $${(startingBalance+tot).toLocaleString(undefined,{maximumFractionDigits:0})}`;}
+  else{const pct=(pfTot/startingBalance)*100;gEl.textContent=(pct>=0?'+':'')+pct.toFixed(2)+'%';gEl.className='sv '+(pct>0?'pos':pct<0?'neg':'neu');gSub.textContent=`${pfLabel} $${startingBalance.toLocaleString()} → $${(startingBalance+pfTot).toLocaleString(undefined,{maximumFractionDigits:0})}`;}
   // Current streak display
   const cs=document.getElementById('statCurrentStreak');const csub=document.getElementById('statCurrentStreakSub');
   if(!n){cs.textContent='—';cs.className='sv neu';csub.textContent='no trades';}
   else if(!curType){cs.textContent='0';cs.className='sv neu';csub.textContent='last was B/E';}
   else{cs.textContent=curStreak;cs.className='sv '+(curType==='WIN'?'pos':'neg');csub.textContent=curType==='WIN'?'🔥 WIN streak':'💀 LOSS streak';}
+  // RAGE MODE — ถ้า consecutive loss ≥ 3 แสดง banner เตือน
+  renderRageBanner(curType==='LOSS'?curStreak:0,ml);
 }
 
-/* DASHBOARD 3-IN-1 */
+/* RAGE MODE BANNER */
+let _rageDismissedAt=null; // timestamp of last dismiss
+function renderRageBanner(curLossStreak,maxLoss){
+  const banner=document.getElementById('rageBanner');if(!banner)return;
+  // Auto-hide if dismissed within last 30 min
+  if(_rageDismissedAt&&(Date.now()-_rageDismissedAt)<30*60*1000){banner.classList.remove('show');return;}
+  const title=document.getElementById('rageTitle');
+  const sub=document.getElementById('rageSub');
+  if(curLossStreak>=5){
+    banner.classList.add('show');
+    title.textContent=`🚨 STOP. ขาดทุน ${curLossStreak} ไม้ติดกัน`;
+    sub.textContent='นี่คือ revenge trade zone — ปิดจอทันที ตลาดไม่ได้ไปไหน แต่เงินคุณไปแล้ว';
+  }else if(curLossStreak>=3){
+    banner.classList.add('show');
+    title.textContent=`⚠️ ขาดทุน ${curLossStreak} ไม้ติดกัน — กำลัง revenge trade อยู่หรือเปล่า?`;
+    sub.textContent='พักก่อน 15 นาที · รีวิว setup ใหม่ · ถามตัวเองว่า trade นี้อยู่ใน plan ไหม';
+  }else{
+    banner.classList.remove('show');
+  }
+}
+function dismissRage(){
+  _rageDismissedAt=Date.now();
+  document.getElementById('rageBanner').classList.remove('show');
+  showToast('ok','Good. พัก ดื่มน้ำ แล้วค่อยกลับมา 🙏');
+}
+
 let currentDashTab='wr';
 function setDashTab(tab){
   currentDashTab=tab;
@@ -1727,7 +1810,7 @@ function renderRollingWR(){
   });
   if(n<2){// just show single point
     const x=pad.l+cw/2;const y=pad.t+ch-(pts[0].wr/100)*ch;
-    ctx.beginPath();ctx.arc(x,y,5,0,Math.PI*2);ctx.fillStyle='#a78bfa';ctx.fill();return;
+    ctx.beginPath();ctx.arc(x,y,5,0,Math.PI*2);ctx.fillStyle='#38bdf8';ctx.fill();return;
   }
   const xS=cw/(n-1||1);const toX=i=>pad.l+i*xS;const toY=v=>pad.t+ch-(v/100)*ch;
   // Gradient fill
@@ -1889,9 +1972,9 @@ function renderSessionAnalysis(){
   });
   const sessions=Object.keys(perf);
   if(!sessions.length){grid.innerHTML='<div style="color:var(--text-2);font-size:12px;">ยังไม่มีข้อมูล</div>';return;}
-  // find best/worst by WR (min 1 trade), only mark if >1 session present
+  // find best/worst by WR (min 3 trades), only mark if >1 eligible session present
   const withWR=sessions.map(s=>({s,wr:perf[s].total?(perf[s].wins/perf[s].total)*100:0,n:perf[s].total}));
-  const eligible=withWR.filter(x=>x.n>=1);
+  const eligible=withWR.filter(x=>x.n>=3);
   let bestS=null,worstS=null;
   if(eligible.length>1){
     bestS=eligible.reduce((a,b)=>b.wr>a.wr?b:a).s;
@@ -1905,7 +1988,7 @@ function renderSessionAnalysis(){
     const p=perf[s];const wr=p.total?((p.wins/p.total)*100).toFixed(0):'—';
     const ev=p.total?(p.pnl/p.total).toFixed(2):'—';
     const cls=s===bestS?'best':s===worstS?'worst':'';
-    const crown=s===bestS?'<span class="sesscrown" title="WR ดีที่สุด">👑</span>':s===worstS?'<span class="sesscrown" title="WR แย่ที่สุด">⚠️</span>':'';
+    const crown=s===bestS?'<span class="sesscrown" title="WR ดีที่สุด (≥3 trades)">👑</span>':s===worstS?'<span class="sesscrown" title="WR แย่ที่สุด (≥3 trades)">⚠️</span>':'';
     return`<div class="sessc ${cls}">
       <div class="sessn"><span>${s}</span>${crown}</div>
       <div class="sesss">
