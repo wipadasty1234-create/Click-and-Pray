@@ -980,20 +980,15 @@ body{background:var(--bg-0);color:var(--text-0);font-family:-apple-system,BlinkM
     <div id="logCards" class="cardswrap"><div class="logempty"><span>ยังไม่มีข้อมูล — เพิ่ม trade แรกเลย</span></div></div>
     <div id="logTable" class="logwrap" style="display:none;">
       <table class="logtbl">
-        <thead><tr><th>#</th><th>Date</th><th>Dir</th><th>Session</th><th>Portfolio</th><th>Entry</th><th>SL$</th><th>TP$</th><th>R:R</th><th>Lot</th><th>Lev</th><th>Risk%</th><th>Risk$</th><th>Fibo</th><th>MTF</th><th>Tags</th><th>Outcome</th><th>PnL($)</th><th></th></tr></thead>
-        <tbody id="logBody"><tr><td colspan="19" class="logempty"><span>ยังไม่มีข้อมูล</span></td></tr></tbody>
+        <thead><tr><th>#</th><th>Date</th><th>Dir</th><th>Session</th><th>Portfolio</th><th>Entry</th><th>SL$</th><th>TP$</th><th>R:R</th><th>Lot</th><th>Lev</th><th>Risk%</th><th>Risk$</th><th>Fibo</th><th>MTF</th><th>Tags</th><th>Mistakes</th><th>Outcome</th><th>PnL($)</th><th></th></tr></thead>
+        <tbody id="logBody"><tr><td colspan="20" class="logempty"><span>ยังไม่มีข้อมูล</span></td></tr></tbody>
       </table>
     </div>
   </div>
 
   <div class="panel">
-    <div class="phdr"><span class="ptitle">Tag Performance</span></div>
+    <div class="phdr"><span class="ptitle">🏷 Tag Performance</span></div>
     <div class="pbody"><div class="tpg" id="tagPerfGrid"><div style="color:var(--text-2);font-size:12px;">ยังไม่มีข้อมูล</div></div></div>
-  </div>
-
-  <div class="panel" id="sessionAnchor">
-    <div class="phdr"><span class="ptitle">🕐 Session Analysis</span><span style="font-size:9px;color:var(--text-2);">London / NY / Asian — WR ไหนดีที่สุด</span></div>
-    <div class="pbody"><div class="sessg" id="sessionGrid"><div style="color:var(--text-2);font-size:12px;">ยังไม่มีข้อมูล</div></div></div>
   </div>
 
   <div class="panel">
@@ -1004,6 +999,22 @@ body{background:var(--bg-0);color:var(--text-0);font-family:-apple-system,BlinkM
     <div id="tpBody" class="pbody">
       <div id="tagPairGrid" class="tpaig"><div style="color:var(--text-2);font-size:12px;">ต้องการ trades ≥2 ที่มี tags ≥2</div></div>
     </div>
+  </div>
+
+  <div class="panel">
+    <div class="phdr" style="cursor:pointer;" onclick="toggleMistakeAnalysis()">
+      <span class="ptitle">🚨 Mistake Analysis</span>
+      <span style="font-size:9px;color:var(--text-2);margin-left:8px;">% ความถี่ + ผลกระทบต่อ PnL</span>
+      <span id="maToggle" style="font-size:12px;color:var(--text-2);margin-left:auto;">▾</span>
+    </div>
+    <div id="maBody" class="pbody">
+      <div id="mistakeAnalysisGrid"><div style="color:var(--text-2);font-size:12px;">ยังไม่มีข้อมูล</div></div>
+    </div>
+  </div>
+
+  <div class="panel" id="sessionAnchor">
+    <div class="phdr"><span class="ptitle">🕐 Session Analysis</span><span style="font-size:9px;color:var(--text-2);">London / NY / Asian — WR ไหนดีที่สุด</span></div>
+    <div class="pbody"><div class="sessg" id="sessionGrid"><div style="color:var(--text-2);font-size:12px;">ยังไม่มีข้อมูล</div></div></div>
   </div>
 
   <div class="panel" id="expTrackerPanel" style="display:none;">
@@ -1112,6 +1123,7 @@ window.onload=()=>{
   setDashTab('wr');
   renderStats(); renderSessionAnalysis(); loadPendingTrades(); renderPending();
   setQuickAdd(loadQuickAddPref());
+  renderMistakeAnalysis();
 };
 
 /* LAB CONFIG */
@@ -1361,6 +1373,11 @@ function initImgDrop(){
   a.addEventListener('drop',e=>{e.preventDefault();a.style.borderColor='var(--border)';const f=e.dataTransfer.files[0];if(f&&f.type.startsWith('image/')){const r=new FileReader();r.onload=ev=>{currentImgData=ev.target.result;showImgPreview(ev.target.result);};r.readAsDataURL(f);}});
 }
 
+/* GET MISTAKES from checkboxes */
+function getMistakes(){
+  return Array.from(document.querySelectorAll('.mistake-cb:checked')).map(cb=>cb.value);
+}
+
 /* ADD TRADE */
 function addTrade(){
   const date=document.getElementById('tradeDate').value;
@@ -1378,7 +1395,8 @@ function addTrade(){
     if(pnlInput===''){alert('กรุณาใส่ PnL ($)');return;}
     const pnl=parseFloat(pnlInput)||0;
     const rp=parseFloat(document.getElementById('qaRiskPct').value)||null;
-    const trade={id:Date.now(),no:state.trades.length+1,date,time,session,entry:'—',sl:'—',tp:'—',rr:'—',fibo:'',mtf:getMTF(),tags:[...state.activeTags],outcome:state.outcome,pnl,lot:'—',leverage:currentLeverage,riskPct:rp?rp.toFixed(1):'—',riskAmt:'',balance:'',dir:state.direction,expName:state.lab.name||'Unnamed',expTF:[...state.lab.tf],duration:'',hypothesis:state.lab.hypothesis,note,exitPrice:null,realRR:null,mae:null,mfe:null,img:null,needsDetail:true,checkPct:0,tradeQuality:state.tradeQuality,resultQuality:state.resultQuality};
+    const mistakes=getMistakes();
+    const trade={id:Date.now(),no:state.trades.length+1,date,time,session,entry:'—',sl:'—',tp:'—',rr:'—',fibo:'',mtf:getMTF(),tags:[...state.activeTags],outcome:state.outcome,pnl,lot:'—',leverage:currentLeverage,riskPct:rp?rp.toFixed(1):'—',riskAmt:'',balance:'',dir:state.direction,expName:state.lab.name||'Unnamed',expTF:[...state.lab.tf],duration:'',hypothesis:state.lab.hypothesis,note,exitPrice:null,realRR:null,mae:null,mfe:null,img:null,needsDetail:true,checkPct:0,tradeQuality:state.tradeQuality,resultQuality:state.resultQuality,mistakes};
     state.trades.push(trade);saveToStorage();
     renderAll();
     showToast('ok',`Quick Add #${trade.no} — ${trade.outcome} ${trade.pnl>=0?'+':''}$${Math.abs(trade.pnl).toFixed(2)} (ต้องเติม detail)`);
@@ -1405,7 +1423,8 @@ function addTrade(){
   let realRR=null;
   if(exitP&&entry&&sl){const diff=state.direction==='BUY'?exitP-entry:entry-exitP;realRR=parseFloat((diff/sl).toFixed(2));}
   const pnl=lot>0?(state.outcome==='WIN'?lot*100*(realRR?sl*realRR:tp):state.outcome==='LOSS'?-(lot*100*sl):0):(state.outcome==='WIN'?(realRR?sl*realRR:tp):state.outcome==='LOSS'?-sl:0);
-  const trade={id:Date.now(),no:state.trades.length+1,date,time,session,entry:entry.toFixed(2),sl:sl.toFixed(2),tp:tp.toFixed(2),rr:`1:${rr.toFixed(1)}`,fibo,mtf:getMTF(),tags:[...state.activeTags],outcome:state.outcome,pnl,lot:lot.toFixed(2),leverage:currentLeverage,riskPct:rp.toFixed(1),riskAmt:riskAmt.toFixed(2),balance:bal.toFixed(0),dir:state.direction,expName:state.lab.name||'Unnamed',expTF:[...state.lab.tf],duration:getDurStr(),hypothesis:state.lab.hypothesis,note,exitPrice:exitP,realRR,mae,mfe,img:currentImgData||null,checkPct,tradeQuality:state.tradeQuality,resultQuality:state.resultQuality};
+  const mistakes=getMistakes();
+  const trade={id:Date.now(),no:state.trades.length+1,date,time,session,entry:entry.toFixed(2),sl:sl.toFixed(2),tp:tp.toFixed(2),rr:`1:${rr.toFixed(1)}`,fibo,mtf:getMTF(),tags:[...state.activeTags],outcome:state.outcome,pnl,lot:lot.toFixed(2),leverage:currentLeverage,riskPct:rp.toFixed(1),riskAmt:riskAmt.toFixed(2),balance:bal.toFixed(0),dir:state.direction,expName:state.lab.name||'Unnamed',expTF:[...state.lab.tf],duration:getDurStr(),hypothesis:state.lab.hypothesis,note,exitPrice:exitP,realRR,mae,mfe,img:currentImgData||null,checkPct,tradeQuality:state.tradeQuality,resultQuality:state.resultQuality,mistakes};
   state.trades.push(trade);saveToStorage();
   const isLucky=trade.outcome==='WIN'&&trade.checkPct<50;
   renderAll();
@@ -1423,6 +1442,7 @@ function clearForm(){
   document.getElementById('qaPnl').value='';document.getElementById('qaRiskPct').value='';
   document.getElementById('realizedRRBox').style.display='none';
   document.querySelectorAll('#tradeQualityBtns .rrc, #resultQualityBtns .rrc').forEach(b=>b.classList.remove('active'));
+  document.querySelectorAll('.mistake-cb').forEach(cb=>cb.checked=false);
   removeImg();
   document.getElementById('rrTarget').value=state.lab.rr;
   document.getElementById('riskPct').value=state.lab.riskPct||1;
@@ -1627,6 +1647,7 @@ function renderLogCards(){
     const maemfe=(t.mae!=null||t.mfe!=null)?`<div style="font-size:9px;color:var(--text-2);margin-top:4px;">MAE: <span style="color:var(--red);">${t.mae!=null?'$'+t.mae:'—'}</span> · MFE: <span style="color:var(--green);">${t.mfe!=null?'$'+t.mfe:'—'}</span></div>`:'';
     const qualityHtml=(t.tradeQuality!=null||t.resultQuality!=null)?`<div style="font-size:9px;color:var(--text-2);margin-top:4px;">${t.tradeQuality!=null?`⭐ Process: <span style="color:var(--gold);">${t.tradeQuality}/5</span>`:''}${(t.tradeQuality!=null&&t.resultQuality!=null)?' · ':''}${t.resultQuality!=null?`🎯 Result: <span style="color:var(--gold);">${t.resultQuality}/5</span>`:''}</div>`:'';
     const imgHtml=t.img?`<div style="margin-top:8px;"><img src="${t.img}" style="width:100%;max-height:140px;object-fit:cover;border-radius:6px;border:1px solid var(--border);cursor:pointer;" onclick="showImgFull('${t.id}')" title="คลิกดูรูปเต็ม"/></div>`:'';
+    const mistakesHtml=(t.mistakes&&t.mistakes.length)?`<div style="display:flex;flex-wrap:wrap;gap:4px;margin-top:6px;">${t.mistakes.map(m=>`<span style="font-size:9px;color:var(--red);background:#2a0808;padding:2px 7px;border-radius:4px;border:1px solid var(--red-dim);">🚨 ${m}</span>`).join('')}</div>`:'';
     return`<div class="tcard ${oc}">
       <button class="tcdel" onclick="deleteTrade(${t.id})" title="ลบ">✕</button>
       <div class="tctop"><div class="tctl">
@@ -1654,6 +1675,7 @@ function renderLogCards(){
       <div class="tcbot"><div class="tctags">${(t.tags||[]).map(tg=>`<span class="tctag">${tg}</span>`).join('')}</div><span style="font-size:9px;color:var(--text-2);">${(t.fibo||'').split('—')[0].trim()}</span></div>
       ${t.note?`<div class="tcnote">💬 ${t.note}</div>`:''}
       ${t.duration?`<div style="font-size:9px;color:var(--text-2);margin-top:5px;">⏱ ${t.duration}</div>`:''}
+      ${mistakesHtml}
       ${imgHtml}
       <div style="display:flex;gap:6px;margin-top:8px;justify-content:flex-end;">
         ${t.needsDetail?`<button onclick="skipDetail(${t.id})" style="padding:4px 10px;border-radius:5px;border:1px solid var(--border);background:transparent;color:var(--text-2);font-size:9px;font-weight:600;cursor:pointer;" onmouseover="this.style.color='var(--text-1)';this.style.borderColor='var(--border-light)'" onmouseout="this.style.color='var(--text-2)';this.style.borderColor='var(--border)'">↩ ข้าม detail</button>`:''}
@@ -1666,8 +1688,10 @@ function renderLogCards(){
 }
 function renderLogTable(){
   const body=document.getElementById('logBody');const trades=getFiltered();
-  if(!trades.length){body.innerHTML=`<tr><td colspan="19" class="logempty"><span>ยังไม่มีข้อมูล</span></td></tr>`;return;}
-  body.innerHTML=trades.map(t=>`<tr>
+  if(!trades.length){body.innerHTML=`<tr><td colspan="20" class="logempty"><span>ยังไม่มีข้อมูล</span></td></tr>`;return;}
+  body.innerHTML=[...trades].reverse().map(t=>{
+    const mistakeHtml=(t.mistakes&&t.mistakes.length)?t.mistakes.map(m=>`<span style="font-size:8px;color:var(--red);background:#2a0808;padding:1px 5px;border-radius:3px;margin-right:2px;display:inline-block;">${m}</span>`).join(''):'<span style="font-size:9px;color:var(--text-2);">—</span>';
+    return`<tr>
     <td style="color:var(--text-2)">${t.no}</td><td>${t.date}</td>
     <td><span class="bdg ${t.dir.toLowerCase()}">${t.dir}</span></td>
     <td style="color:var(--text-1)">${t.session}</td>
@@ -1680,10 +1704,11 @@ function renderLogTable(){
     <td style="color:var(--text-2);font-size:10px">${(t.fibo||'').split('—')[0].trim()}</td>
     <td style="color:var(--text-2);font-size:10px">${t.mtf}</td>
     <td>${(t.tags||[]).map(tg=>`<span style="font-size:9px;color:var(--blue);margin-right:3px">${tg}</span>`).join('')}</td>
+    <td style="min-width:120px;">${mistakeHtml}</td>
     <td><span class="bdg ${t.outcome.toLowerCase()}">${t.outcome}</span>${t.needsDetail?' <span class="needs-detail-badge">⚡</span>':''}</td>
     <td style="color:${t.pnl>0?'var(--green)':t.pnl<0?'var(--red)':'var(--text-1)'}">${t.pnl>=0?'+':''}$${Math.abs(t.pnl).toFixed(2)}</td>
     <td><button class="delbtn" onclick="deleteTrade(${t.id})">✕</button></td>
-  </tr>`).join('');
+  </tr>`;}).join('');
 }
 
 /* DELETE TRADE */
@@ -1777,7 +1802,7 @@ function saveEditTrade(){
 
 /* RENDER ALL — full re-render chain after any data mutation */
 function renderAll(){
-  renderLog();renderStats();renderDashboard();renderTagPerformance();renderExpTracker();renderExpFilterTags();renderTagPairs();renderCalendar();renderWeeklyReflections();renderSessionAnalysis();
+  renderLog();renderStats();renderDashboard();renderTagPerformance();renderExpTracker();renderExpFilterTags();renderTagPairs();renderMistakeAnalysis();renderCalendar();renderWeeklyReflections();renderSessionAnalysis();
 }
 
 /* STATS */
@@ -1798,6 +1823,23 @@ function renderStats(){
   const pe=document.getElementById('statPnL');pe.textContent=(tot>=0?'+':'')+'$'+tot.toFixed(2);pe.className='sv '+(tot>0?'pos':tot<0?'neg':'neu');
   document.getElementById('statPnLSub').textContent=n?`avg $${(tot/n).toFixed(2)}/trade`:'actual lot';
   document.getElementById('statEV').textContent=ev!==null?(ev>=0?'+':'')+'$'+ev:'—';
+  // Expectancy = (WR × Avg Win) - (LR × Avg Loss) / Avg Loss  → expressed as R multiple
+  const winTrades=t.filter(x=>x.outcome==='WIN');const lossTrades=t.filter(x=>x.outcome==='LOSS');
+  const avgWin=winTrades.length?winTrades.reduce((a,x)=>a+x.pnl,0)/winTrades.length:0;
+  const avgLoss=lossTrades.length?Math.abs(lossTrades.reduce((a,x)=>a+x.pnl,0)/lossTrades.length):0;
+  const wrRate=n?wins/n:0;const lrRate=n?losses/n:0;
+  let expVal=null,expStr='—',expSub='EV/Trade';
+  if(n>=2&&avgLoss>0){
+    expVal=(wrRate*avgWin)-(lrRate*avgLoss);
+    const expR=avgLoss>0?expVal/avgLoss:0;
+    expStr=(expVal>=0?'+':'')+'$'+expVal.toFixed(2);
+    expSub=`${expR>=0?'+':''}${expR.toFixed(2)}R per trade`;
+  }else if(n>=2&&avgLoss===0&&avgWin>0){
+    expVal=wrRate*avgWin;expStr='+$'+expVal.toFixed(2);expSub='No losses yet';
+  }
+  const expEl=document.getElementById('statExpectancy');const expSubEl=document.getElementById('statExpectancySub');
+  expEl.textContent=expStr;expEl.className='sv '+(expVal===null?'gld':expVal>0?'pos':expVal<0?'neg':'neu');
+  expSubEl.textContent=expSub;
   document.getElementById('statStreak').textContent=mw;document.getElementById('statMaxLoss').textContent='Max Loss: '+ml;
   document.getElementById('statAvgRR').textContent=avg;document.getElementById('statPF').textContent=pf;
   // % Growth (vs starting balance) — คำนวณเฉพาะ trades ของ Portfolio ที่ active อยู่
@@ -2145,7 +2187,46 @@ function renderWF(){document.getElementById('wfGrid').innerHTML=LAB_WF.map((s,i)
 let wfOpen=true;
 function toggleWF(){wfOpen=!wfOpen;document.getElementById('wfBody').style.display=wfOpen?'block':'none';document.getElementById('wfToggleIcon').textContent=wfOpen?'▾':'▸';}
 
-/* TAG PAIRS */
+/* MISTAKE ANALYSIS */
+let maOpen=true;
+function toggleMistakeAnalysis(){maOpen=!maOpen;document.getElementById('maBody').style.display=maOpen?'block':'none';document.getElementById('maToggle').textContent=maOpen?'▾':'▸';}
+function renderMistakeAnalysis(){
+  const grid=document.getElementById('mistakeAnalysisGrid');if(!grid)return;
+  const allTrades=state.trades;const n=allTrades.length;
+  if(!n){grid.innerHTML='<div style="color:var(--text-2);font-size:12px;">ยังไม่มีข้อมูล</div>';return;}
+  const perf={};
+  allTrades.forEach(t=>{
+    (t.mistakes||[]).forEach(m=>{
+      if(!perf[m])perf[m]={count:0,pnl:0,wins:0,losses:0};
+      perf[m].count++;perf[m].pnl+=t.pnl;
+      if(t.outcome==='WIN')perf[m].wins++;else if(t.outcome==='LOSS')perf[m].losses++;
+    });
+  });
+  const mistakes=Object.keys(perf);
+  if(!mistakes.length){grid.innerHTML='<div style="color:var(--green);font-size:12px;">🎉 ยังไม่มีการบันทึกความผิดพลาด</div>';return;}
+  mistakes.sort((a,b)=>perf[b].count-perf[a].count);
+  const maxCount=perf[mistakes[0]].count;
+  const tradesWithMistakes=allTrades.filter(t=>t.mistakes&&t.mistakes.length).length;
+  grid.innerHTML='<div style="font-size:9px;color:var(--text-2);margin-bottom:10px;text-transform:uppercase;letter-spacing:.1em;">วิเคราะห์จาก '+n+' trades — '+tradesWithMistakes+' trades ที่มีความผิดพลาด</div><div style="display:flex;flex-direction:column;gap:10px;">'+
+  mistakes.map(m=>{
+    const p=perf[m];const pct=((p.count/n)*100).toFixed(0);
+    const avgPnl=p.pnl/p.count;const totalOC=p.wins+p.losses;const wr=totalOC?((p.wins/totalOC)*100).toFixed(0):'—';
+    const barW=Math.round((p.count/maxCount)*100);const pnlColor=p.pnl>=0?'var(--green)':'var(--red)';
+    return'<div style="background:var(--bg-2);border:1px solid var(--border);border-left:3px solid var(--red-dim);border-radius:8px;padding:10px 12px;">'+
+      '<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px;">'+
+        '<span style="font-size:11px;font-weight:700;color:var(--text-0);">🚨 '+m+'</span>'+
+        '<span style="font-size:10px;color:var(--red);font-weight:700;">'+pct+'% ('+p.count+'/'+n+' trades)</span>'+
+      '</div>'+
+      '<div style="background:var(--bg-3);border-radius:4px;height:5px;overflow:hidden;margin-bottom:8px;"><div style="height:100%;width:'+barW+'%;background:linear-gradient(90deg,var(--red-dim),var(--red));border-radius:4px;"></div></div>'+
+      '<div style="display:grid;grid-template-columns:repeat(3,1fr);gap:6px;">'+
+        '<div style="text-align:center;background:var(--bg-3);border-radius:6px;padding:6px;"><div style="font-size:8px;color:var(--text-2);text-transform:uppercase;margin-bottom:3px;">Win Rate</div><div style="font-size:13px;font-weight:700;font-family:monospace;color:'+(parseInt(wr)>=50?'var(--green)':'var(--red)')+';">'+wr+'%</div></div>'+
+        '<div style="text-align:center;background:var(--bg-3);border-radius:6px;padding:6px;"><div style="font-size:8px;color:var(--text-2);text-transform:uppercase;margin-bottom:3px;">Avg PnL</div><div style="font-size:13px;font-weight:700;font-family:monospace;color:'+pnlColor+';">'+(avgPnl>=0?'+':'')+'$'+Math.abs(avgPnl).toFixed(1)+'</div></div>'+
+        '<div style="text-align:center;background:var(--bg-3);border-radius:6px;padding:6px;"><div style="font-size:8px;color:var(--text-2);text-transform:uppercase;margin-bottom:3px;">Total PnL</div><div style="font-size:13px;font-weight:700;font-family:monospace;color:'+pnlColor+';">'+(p.pnl>=0?'+':'')+'$'+Math.abs(p.pnl).toFixed(1)+'</div></div>'+
+      '</div>'+
+    '</div>';
+  }).join('')+'</div>';
+}
+
 let tpOpen=true;
 function toggleTP(){tpOpen=!tpOpen;document.getElementById('tpBody').style.display=tpOpen?'block':'none';document.getElementById('tpToggle').textContent=tpOpen?'▾':'▸';}
 function renderTagPairs(){
