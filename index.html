@@ -2326,19 +2326,107 @@ function renderTagPairs(){
 }
 
 
-/* STORAGE */
+/* STORAGE — IndexedDB-backed (falls back to localStorage if IndexedDB unavailable) */
 const LS_KEY='xauusd_smc_trades_v1';
-function saveToStorage(){
-  try{
-    const data=JSON.stringify(state.trades);
-    localStorage.setItem(LS_KEY,data);
-    updateSBdg(true);
-    // Warn if storage is large (images)
-    const kb=Math.round(data.length/1024);
-    if(kb>3000)showToast('info',`Storage ใหญ่ ${kb}KB — แนะนำ Export สำรอง`);
-  }catch(e){showToast('err','Storage เต็ม — Export ก่อนเพิ่มรูปใหม่');}
+const IDB_NAME='ClickPrayLabDB';
+const IDB_VERSION=1;
+const IDB_STORE='kv';
+const IDB_SUPPORTED=(typeof indexedDB!=='undefined');
+let _idbPromise=null;
+function idbOpen(){
+  if(_idbPromise)return _idbPromise;
+  _idbPromise=new Promise((resolve,reject)=>{
+    try{
+      const req=indexedDB.open(IDB_NAME,IDB_VERSION);
+      req.onupgradeneeded=e=>{
+        const db=e.target.result;
+        if(!db.objectStoreNames.contains(IDB_STORE))db.createObjectStore(IDB_STORE);
+      };
+      req.onsuccess=()=>resolve(req.result);
+      req.onerror=()=>reject(req.error||new Error('IndexedDB open failed'));
+      req.onblocked=()=>reject(new Error('IndexedDB open blocked'));
+    }catch(e){reject(e);}
+  });
+  return _idbPromise;
 }
-function loadFromStorage(){try{const raw=localStorage.getItem(LS_KEY);if(!raw)return;const parsed=JSON.parse(raw);if(Array.isArray(parsed)&&parsed.length){state.trades=parsed;renderAll();showToast('ok',`โหลด ${parsed.length} trades`);}}catch(e){showToast('err','โหลดไม่สำเร็จ');}}
+function idbSet(key,value){
+  return idbOpen().then(db=>new Promise((resolve,reject)=>{
+    try{
+      const tx=db.transaction(IDB_STORE,'readwrite');
+      tx.objectStore(IDB_STORE).put(value,key);
+      tx.oncomplete=()=>resolve(true);
+      tx.onerror=()=>reject(tx.error);
+      tx.onabort=()=>reject(tx.error||new Error('IndexedDB write aborted'));
+    }catch(e){reject(e);}
+  }));
+}
+function idbGet(key){
+  return idbOpen().then(db=>new Promise((resolve,reject)=>{
+    try{
+      const tx=db.transaction(IDB_STORE,'readonly');
+      const req=tx.objectStore(IDB_STORE).get(key);
+      req.onsuccess=()=>resolve(req.result);
+      req.onerror=()=>reject(req.error);
+    }catch(e){reject(e);}
+  }));
+}
+function idbDelete(key){
+  return idbOpen().then(db=>new Promise((resolve,reject)=>{
+    try{
+      const tx=db.transaction(IDB_STORE,'readwrite');
+      tx.objectStore(IDB_STORE).delete(key);
+      tx.oncomplete=()=>resolve(true);
+      tx.onerror=()=>reject(tx.error);
+    }catch(e){reject(e);}
+  }));
+}
+function saveToStorage(){
+  const data=JSON.stringify(state.trades);
+  if(!IDB_SUPPORTED){
+    // Fallback: browser has no IndexedDB support at all (very rare/old browser)
+    try{localStorage.setItem(LS_KEY,data);updateSBdg(true);}
+    catch(e){console.error('saveToStorage fallback error:',e);showToast('err','Storage เต็ม — Export ก่อนเพิ่มรูปใหม่');}
+    return;
+  }
+  idbSet(LS_KEY,data).then(()=>{
+    updateSBdg(true);
+    const kb=Math.round(data.length/1024);
+    if(kb>20000)showToast('info',`Storage ใหญ่ ${kb}KB — แนะนำ Export สำรอง`);
+  }).catch(e=>{
+    console.error('saveToStorage error:',e);
+    updateSBdg(false);
+    showToast('err','บันทึกไม่สำเร็จ — Export ข้อมูลสำรองไว้ก่อน');
+  });
+}
+async function loadFromStorage(){
+  try{
+    let raw=null;
+    if(IDB_SUPPORTED){
+      raw=await idbGet(LS_KEY);
+      // One-time migration from legacy localStorage data (older app versions)
+      if(!raw){
+        const oldRaw=localStorage.getItem(LS_KEY);
+        if(oldRaw){
+          raw=oldRaw;
+          try{await idbSet(LS_KEY,raw);localStorage.removeItem(LS_KEY);}
+          catch(migErr){console.error('storage migration error:',migErr);}
+        }
+      }
+    }else{
+      raw=localStorage.getItem(LS_KEY);
+    }
+    if(!raw)return;
+    const parsed=JSON.parse(raw);
+    if(Array.isArray(parsed)&&parsed.length){
+      state.trades=parsed;
+      renderAll();
+      showToast('ok',`โหลด ${parsed.length} trades`);
+    }
+  }catch(e){
+    console.error('loadFromStorage error:',e);
+    showToast('err','โหลดไม่สำเร็จ');
+  }
+}
 function updateSBdg(s){document.getElementById('storageDot').style.background=s?'var(--green)':'var(--gold)';document.getElementById('storageInfo').textContent=`Saved · ${state.trades.length} trades`;}
 
 /* EXPORT/IMPORT */
@@ -2352,7 +2440,7 @@ function importJSON(ev){const file=ev.target.files[0];if(!file)return;const r=ne
 /* MODALS */
 function hideMdl(id){document.getElementById(id).classList.remove('show');}
 function showClearModal(){document.getElementById('clearModal').classList.add('show');}
-function clearAllTrades(){state.trades=[];localStorage.removeItem(LS_KEY);hideMdl('clearModal');renderAll();document.getElementById('storageDot').style.background='var(--text-2)';document.getElementById('storageInfo').textContent='Auto-save ON';showToast('info','เคลียข้อมูลแล้ว');}
+function clearAllTrades(){state.trades=[];if(IDB_SUPPORTED){idbDelete(LS_KEY).catch(e=>console.error('clearAllTrades idbDelete error:',e));}else{localStorage.removeItem(LS_KEY);}hideMdl('clearModal');renderAll();document.getElementById('storageDot').style.background='var(--text-2)';document.getElementById('storageInfo').textContent='Auto-save ON';showToast('info','เคลียข้อมูลแล้ว');}
 function editInstrument(){document.getElementById('instrumentInput').value=instrumentName;document.getElementById('instrumentModal').classList.add('show');setTimeout(()=>{const i=document.getElementById('instrumentInput');i.focus();i.select();},100);}
 function saveInstrument(){const v=(document.getElementById('instrumentInput').value.trim().toUpperCase())||'XAUUSD';instrumentName=v;localStorage.setItem('smc_instrument',v);document.getElementById('instrumentName').textContent=v;hideMdl('instrumentModal');showToast('ok',`Instrument → ${v}`);}
 function editStartBalance(){document.getElementById('startBalInput').value=startingBalance||'';document.getElementById('startBalModal').classList.add('show');setTimeout(()=>{const i=document.getElementById('startBalInput');i.focus();i.select();},100);}
